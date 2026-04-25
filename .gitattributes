@@ -1,0 +1,5 @@
+/gradlew text eol=lf
+*.bat text eol=crlf
+*.jar binary
+src/main/resources/application-secret.properties filter=git-crypt diff=git-crypt
+*.key filter=git-crypt diff=git-crypt
