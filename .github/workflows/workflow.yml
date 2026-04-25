@@ -1,0 +1,70 @@
+name: Java CI with Gradle and git-crypt
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install git-crypt
+        run: sudo apt-get install -y git-crypt
+
+      - name: Unlock git-crypt
+        env:
+          G_KEY: ${{ secrets.GIT_CRYPT_KEY }}
+        run: |
+          echo "$G_KEY" | base64 -d > ./secret.key
+          git-crypt unlock ./secret.key
+          rm ./secret.key
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Copy JAR to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "build/libs/*SNAPSHOT.jar"
+          target: "/home/ubuntu/app/11th-1team-BE"
+
+      - name: Execute deploy script directly via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            REPOSITORY=/home/ubuntu/app/11th-1team-BE
+            cd $REPOSITORY
+                     
+            CURRENT_PID=$(pgrep -f 11th-1team-BE)
+            if [ -z "$CURRENT_PID" ]; then
+              echo "> 현재 구동중인 애플리케이션이 없으므로 종료하지 않습니다."
+            else
+              echo "> kill -15 $CURRENT_PID"
+              kill -15 $CURRENT_PID
+              sleep 5
+            fi
+                     
+            JAR_NAME=$(ls $REPOSITORY/build/libs/ | grep 'SNAPSHOT.jar' | tail -n 1)
+            JAR_PATH=$REPOSITORY/build/libs/$JAR_NAME
+                     
+            echo "> 새 애플리케이션 배포: $JAR_PATH"
+            nohup java -jar $JAR_PATH > $REPOSITORY/nohup.out 2>&1 &
