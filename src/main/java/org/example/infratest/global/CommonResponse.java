@@ -25,7 +25,7 @@ public class CommonResponse<T> {
     }
 
     public static CommonResponse<Void> successVoid(HttpStatus status) {
-        return new CommonResponse<>(200, null, null);
+        return new CommonResponse<>(status.value(), null, null);
     }
 
     public static CommonResponse<Void> fail(ErrorCode errorCode) {
