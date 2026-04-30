@@ -1,4 +1,6 @@
-package org.example.infratest.global;
+package org.example.infratest.global.api;
+
+import org.example.infratest.global.exception.ErrorCode;
 
 public record ErrorResponse(
         String code,

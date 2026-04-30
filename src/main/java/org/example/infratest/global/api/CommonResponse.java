@@ -1,8 +1,9 @@
-package org.example.infratest.global;
+package org.example.infratest.global.api;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.example.infratest.global.exception.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 @Getter

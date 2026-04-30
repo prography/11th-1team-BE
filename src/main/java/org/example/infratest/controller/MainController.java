@@ -3,7 +3,7 @@ package org.example.infratest.controller;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.infratest.entity.MemberEntity;
-import org.example.infratest.global.CommonResponse;
+import org.example.infratest.global.api.CommonResponse;
 import org.example.infratest.service.FileUploadService;
 import org.example.infratest.service.MemberService;
 import org.springframework.http.HttpStatus;

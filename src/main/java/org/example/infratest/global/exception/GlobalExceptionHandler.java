@@ -1,6 +1,7 @@
-package org.example.infratest.global;
+package org.example.infratest.global.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.infratest.global.api.CommonResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
