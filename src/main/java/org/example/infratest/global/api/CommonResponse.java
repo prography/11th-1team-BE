@@ -1,6 +1,7 @@
 package org.example.infratest.global.api;
 
 import lombok.Getter;
+import lombok.NonNull;
 import org.example.infratest.global.exception.ErrorCode;
 import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpHeaders;
@@ -9,7 +10,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 @Getter
-public class CommonResponse<T> extends ResponseEntity<T> {
+public class CommonResponse<T> extends ResponseEntity<@NonNull T> {
     private final ErrorResponse error;
 
     public CommonResponse(HttpStatusCode status, ErrorResponse error) {
