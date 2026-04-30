@@ -13,22 +13,22 @@ import org.springframework.http.ResponseEntity;
 public class CommonResponse<T> extends ResponseEntity<@NonNull T> {
     private final ErrorResponse error;
 
-    public CommonResponse(HttpStatusCode status, ErrorResponse error) {
+    private CommonResponse(HttpStatusCode status, ErrorResponse error) {
         super(status);
         this.error = error;
     }
 
-    public CommonResponse(@Nullable T body, HttpStatusCode status, ErrorResponse error) {
+    private CommonResponse(@Nullable T body, HttpStatusCode status, ErrorResponse error) {
         super(body, status);
         this.error = error;
     }
 
-    public CommonResponse(HttpHeaders headers, HttpStatusCode status, ErrorResponse error) {
+    private CommonResponse(HttpHeaders headers, HttpStatusCode status, ErrorResponse error) {
         super(headers, status);
         this.error = error;
     }
 
-    public CommonResponse(@Nullable T body, @Nullable HttpHeaders headers, int rawStatus, ErrorResponse error) {
+    private CommonResponse(@Nullable T body, @Nullable HttpHeaders headers, int rawStatus, ErrorResponse error) {
         super(body, headers, rawStatus);
         this.error = error;
     }
