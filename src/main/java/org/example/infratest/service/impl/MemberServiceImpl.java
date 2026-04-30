@@ -1,4 +1,4 @@
-package org.example.infratest.service;
+package org.example.infratest.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.example.infratest.entity.MemberEntity;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MemberService {
+public class MemberServiceImpl {
     private final MemberRepository memberRepository;
 
     @Transactional
@@ -19,6 +19,7 @@ public class MemberService {
     }
 
     public List<MemberEntity> list() {
-        return memberRepository.findAll();
+        String searchName = null;
+        return memberRepository.searchMembers(searchName);
     }
 }

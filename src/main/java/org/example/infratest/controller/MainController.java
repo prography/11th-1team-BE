@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.infratest.entity.MemberEntity;
 import org.example.infratest.global.api.CommonResponse;
 import org.example.infratest.service.FileUploadService;
-import org.example.infratest.service.MemberService;
+import org.example.infratest.service.impl.MemberServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,18 +18,18 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @RequestMapping("/main")
 public class MainController {
-    private final MemberService memberService;
+    private final MemberServiceImpl memberServiceImpl;
     private final FileUploadService fileUploadService;
 
     @PostMapping("/save")
     public CommonResponse<?> save(@RequestBody String name) {
-        MemberEntity member = memberService.save(name);
+        MemberEntity member = memberServiceImpl.save(name);
         return CommonResponse.success(member, HttpStatus.CREATED);
     }
 
     @GetMapping("/list")
     public CommonResponse<?> list() {
-        List<MemberEntity> members = memberService.list();
+        List<MemberEntity> members = memberServiceImpl.list();
         return CommonResponse.success(members);
     }
 
