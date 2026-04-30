@@ -42,6 +42,6 @@ public class LocalFileUploadServiceImpl implements FileUploadService {
         Path filePath = Paths.get(uploadDir, fileName);
         file.transferTo(filePath.toFile());
 
-        return "http://localhost:8080/local_uploads/" + fileName;
+        return fileName;
     }
 }
