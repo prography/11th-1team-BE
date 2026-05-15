@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Profile("test")
+@Profile("!prod")
 public class LocalFileUploadServiceImpl implements FileUploadService {
     private final String uploadDir = System.getProperty("user.dir") + "/local_uploads/";
 
