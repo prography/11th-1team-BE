@@ -62,6 +62,9 @@ public class OnBoardingServiceImpl {
     @Transactional
     public SaveProfileBasicDto.Response saveBasicInfoLogic(SaveProfileBasicDto.Request request, Long memberId) {
         Member member = memberService.findById(memberId).orElseThrow(() -> new BusinessException(AuthErrorCode.MEMBER_NOT_FOUND));
+        if (memberService.hasBasicInformation(member)) {
+            throw new BusinessException(OnBoardErrorCode.ONBOARD_PROFILE_ALREADY_EXISTS);
+        }
         if(ObjectUtils.isEmpty(saveBasicInfo(request, member))) throw new BusinessException(OnBoardErrorCode.ONBOARD_BASIC_SAVE_ERROR);
         if(saveMemberAgreement(request, member).isEmpty()) throw new BusinessException(OnBoardErrorCode.ONBOARD_TERM_SAVE_ERROR);
         saveOrUpdateState(member);
@@ -86,6 +89,9 @@ public class OnBoardingServiceImpl {
     @Transactional
     public SaveProfileLifeStyleDto.Response saveLifeStyleLogic(SaveProfileLifeStyleDto.Request request, Long memberId) {
         Member member = memberService.findById(memberId).orElseThrow(() -> new BusinessException(AuthErrorCode.MEMBER_NOT_FOUND));
+        if (memberService.hasLifestyle(member)) {
+            throw new BusinessException(OnBoardErrorCode.ONBOARD_PROFILE_ALREADY_EXISTS);
+        }
         if(saveMemberLifeStyle(request, member).isEmpty()) throw new BusinessException(OnBoardErrorCode.ONBOARD_LIFE_STYLE_SAVE_ERROR);
         saveOrUpdateState(member);
         return SaveProfileLifeStyleDto.Response.builder().updatedAt(LocalDateTime.now()).build();
@@ -146,6 +152,10 @@ public class OnBoardingServiceImpl {
     @Transactional
     public SaveProfileRoomInfoDto.Response saveRoomInfoLogic(SaveProfileRoomInfoDto.Request request, Long memberId) {
         Member member = memberService.findById(memberId).orElseThrow(() -> new BusinessException(AuthErrorCode.MEMBER_NOT_FOUND));
+        validateRoomProfile(request);
+        if (memberService.hasRoomProfile(member)) {
+            throw new BusinessException(OnBoardErrorCode.ONBOARD_PROFILE_ALREADY_EXISTS);
+        }
         if(ObjectUtils.isEmpty(saveRoomInfo(request,member))) throw new BusinessException(OnBoardErrorCode.ONBOARD_ROOM_INFO_SAVE_ERROR);
         saveOrUpdateState(member);
         return SaveProfileRoomInfoDto.Response.builder().updatedAt(LocalDateTime.now()).build();
@@ -154,6 +164,11 @@ public class OnBoardingServiceImpl {
     @Transactional
     public SaveProfileAllDto.Response saveAll(SaveProfileAllDto.Request request, Long memberId) {
         Member member = memberService.findById(memberId).orElseThrow(() -> new BusinessException(AuthErrorCode.MEMBER_NOT_FOUND));
+        validateRoomProfile(request);
+        // POST는 최초 저장용이다. 이미 값이 있으면 덮지 않고 수정 API를 쓰도록 알려준다.
+        if (memberService.hasAnyOnboardingData(member)) {
+            throw new BusinessException(OnBoardErrorCode.ONBOARD_PROFILE_ALREADY_EXISTS);
+        }
 
         SaveProfileBasicDto.Request basicRequest = SaveProfileBasicDto.Request.builder()
                 .name(request.getName())
@@ -190,9 +205,29 @@ public class OnBoardingServiceImpl {
         return SaveProfileAllDto.Response.builder().updatedAt(LocalDateTime.now()).build();
     }
 
+    private void validateRoomProfile(RoomProfileInput request) {
+        if (request.getType() == null) {
+            throw new BusinessException(OnBoardErrorCode.ONBOARD_PROFILE_VALIDATION_FAIL);
+        }
+
+        boolean invalidOffer = request.getType() == RoomProfileType.OFFER
+                && (request.getDeposit() == null || request.getMounthRent() == null);
+        boolean invalidSeeker = request.getType() == RoomProfileType.SEEKER
+                && (request.getMinDeposit() == null
+                || request.getMaxDeposit() == null
+                || request.getMinMounthRent() == null
+                || request.getMaxMounthRent() == null
+                || request.getMinDeposit() > request.getMaxDeposit()
+                || request.getMinMounthRent() > request.getMaxMounthRent());
+
+        if (invalidOffer || invalidSeeker) {
+            throw new BusinessException(OnBoardErrorCode.ONBOARD_PROFILE_VALIDATION_FAIL);
+        }
+    }
+
     @Transactional
     public void modifyBasicInfo(ModifyProfileBasicDto.Request request, Member member) {
-        BasicInformation basicInformation = basicInformationService.findByMember(member).getFirst();
+        BasicInformation basicInformation = basicInformationService.findLatestBasicInformation(member);
         basicInformation.modifyBasicInformation(request);
     }
 
@@ -365,6 +400,7 @@ public class OnBoardingServiceImpl {
     @Transactional
     public ModifyProfileRoomInfoDto.Response modifyRoomInfoLogic(ModifyProfileRoomInfoDto.Request request, Long memberId) {
         Member member = memberService.findById(memberId).orElseThrow(() -> new BusinessException(AuthErrorCode.MEMBER_NOT_FOUND));
+        validateRoomProfile(request);
         modifyRoomInfo(request, member);
         return ModifyProfileRoomInfoDto.Response.builder().updatedAt(LocalDateTime.now()).build();
     }
@@ -372,6 +408,7 @@ public class OnBoardingServiceImpl {
     @Transactional
     public ModifyProfileAllDto.Response modifyAll(ModifyProfileAllDto.Request request, Long memberId) {
         Member member = memberService.findById(memberId).orElseThrow(() -> new BusinessException(AuthErrorCode.MEMBER_NOT_FOUND));
+        validateRoomProfile(request);
 
         ModifyProfileBasicDto.Request basicRequest = ModifyProfileBasicDto.Request.builder()
                 .name(request.getName())

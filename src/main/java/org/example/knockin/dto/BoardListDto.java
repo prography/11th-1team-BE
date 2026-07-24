@@ -1,5 +1,7 @@
 package org.example.knockin.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -32,9 +34,13 @@ public class BoardListDto {
         Integer maxDeposit;
 
         @Schema(description = "최소 월세")
+        @JsonProperty("minMonthlyRent")
+        @JsonAlias("minMounthRent")
         Integer minMounthRent;
 
         @Schema(description = "최대 월세")
+        @JsonProperty("maxMonthlyRent")
+        @JsonAlias("maxMounthRent")
         Integer maxMounthRent;
     }
 

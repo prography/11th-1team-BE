@@ -218,6 +218,34 @@ public class ChatServiceImpl {
                 .build();
     }
 
+    @Transactional
+    public ChatRoomCreateDto.Response getOrCreateChattingRoom(ChattingRequired chattingRequired) {
+        // 수락 요청이 다시 들어와도 방을 하나 더 만들지 않고 기존 방을 돌려준다.
+        return chattingRoomService.findByChattingRequired(chattingRequired)
+                .map(room -> ChatRoomCreateDto.Response.builder()
+                        .chatRoomId(room.getId())
+                        .updatedAt(room.getCreatedAt())
+                        .build())
+                .orElseGet(() -> createChattingRoom(chattingRequired));
+    }
+
+    private ChatRoomCreateDto.Response createChattingRoom(ChattingRequired chattingRequired) {
+        Member requester = chattingRequired.getRequester();
+        Member requestee = chattingRequired.getRequestee();
+
+        validateActiveRoomDoesNotExist(requester.getId(), requestee.getId());
+        validateChatRoomLimit(requester.getId(), requestee.getId());
+
+        ChattingRoom chattingRoom = chattingRoomService.save(chattingRequired);
+        chatRoomMemberService.saveAll(chattingRoom, List.of(requester, requestee));
+        chattingScoreService.saveAll(roommateScoreService.createChattingScores(chattingRequired));
+
+        return ChatRoomCreateDto.Response.builder()
+                .chatRoomId(chattingRoom.getId())
+                .updatedAt(LocalDateTime.now())
+                .build();
+    }
+
     private void validateActiveRoomDoesNotExist(Long requesterId, Long requesteeId) {
         if (chattingRoomService.existsActiveRoomBetweenMembers(requesterId, requesteeId)) {
             throw new BusinessException(ChattingErrorCode.ROOM_DUPLICATE);

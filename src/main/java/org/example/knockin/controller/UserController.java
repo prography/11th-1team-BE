@@ -2,6 +2,7 @@ package org.example.knockin.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.knockin.dto.*;
 import org.example.knockin.global.api.CommonResponse;
@@ -33,49 +34,49 @@ public class UserController {
 
     @PostMapping("/profile/basic")
     @Operation(summary = "기본정보 저장")
-    public CommonResponse<SaveProfileBasicDto.Response> saveBasicInfo(@RequestBody SaveProfileBasicDto.Request request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public CommonResponse<SaveProfileBasicDto.Response> saveBasicInfo(@Valid @RequestBody SaveProfileBasicDto.Request request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return CommonResponse.status(HttpStatus.OK).body(onBoardingService.saveBasicInfoLogic(request, principalDetails.getMember().getId()));
     }
 
     @PostMapping("/profile/lifestyle")
     @Operation(summary = "라이프스타일 저장")
-    public CommonResponse<SaveProfileLifeStyleDto.Response> saveLifeStyle(@RequestBody SaveProfileLifeStyleDto.Request request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public CommonResponse<SaveProfileLifeStyleDto.Response> saveLifeStyle(@Valid @RequestBody SaveProfileLifeStyleDto.Request request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return CommonResponse.status(HttpStatus.OK).body(onBoardingService.saveLifeStyleLogic(request, principalDetails.getMember().getId()));
     }
 
     @PostMapping("/profile/roominfo")
     @Operation(summary = "방 정보 저장")
-    public CommonResponse<SaveProfileRoomInfoDto.Response> saveRoomInfo(@RequestBody SaveProfileRoomInfoDto.Request request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public CommonResponse<SaveProfileRoomInfoDto.Response> saveRoomInfo(@Valid @RequestBody SaveProfileRoomInfoDto.Request request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return CommonResponse.status(HttpStatus.OK).body(onBoardingService.saveRoomInfoLogic(request, principalDetails.getMember().getId()));
     }
 
     @PostMapping("/profile/all")
     @Operation(summary = "전체 정보 저장")
-    public CommonResponse<SaveProfileAllDto.Response> saveAll(@RequestBody SaveProfileAllDto.Request request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public CommonResponse<SaveProfileAllDto.Response> saveAll(@Valid @RequestBody SaveProfileAllDto.Request request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return CommonResponse.status(HttpStatus.OK).body(onBoardingService.saveAll(request, principalDetails.getMember().getId()));
     }
 
     @PutMapping("/profile/basic")
     @Operation(summary = "기본정보 수정")
-    public CommonResponse<ModifyProfileBasicDto.Response> modifyBasicInfo(@RequestBody ModifyProfileBasicDto.Request request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public CommonResponse<ModifyProfileBasicDto.Response> modifyBasicInfo(@Valid @RequestBody ModifyProfileBasicDto.Request request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return CommonResponse.status(HttpStatus.OK).body(onBoardingService.modifyBasicInfoLogic(request, principalDetails.getMember().getId()));
     }
 
     @PutMapping("/profile/lifestyle")
     @Operation(summary = "라이프스타일 수정")
-    public CommonResponse<ModifyProfileLifeStyleDto.Response> modifyLifeStyle(@RequestBody ModifyProfileLifeStyleDto.Request request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public CommonResponse<ModifyProfileLifeStyleDto.Response> modifyLifeStyle(@Valid @RequestBody ModifyProfileLifeStyleDto.Request request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return CommonResponse.status(HttpStatus.OK).body(onBoardingService.modifyLifeStyleLogic(request, principalDetails.getMember().getId()));
     }
 
     @PutMapping("/profile/roominfo")
     @Operation(summary = "방 정보 수정")
-    public CommonResponse<ModifyProfileRoomInfoDto.Response> modifyRoomInfo(@RequestBody ModifyProfileRoomInfoDto.Request request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public CommonResponse<ModifyProfileRoomInfoDto.Response> modifyRoomInfo(@Valid @RequestBody ModifyProfileRoomInfoDto.Request request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return CommonResponse.status(HttpStatus.OK).body(onBoardingService.modifyRoomInfoLogic(request, principalDetails.getMember().getId()));
     }
 
     @PutMapping("/profile/all")
     @Operation(summary = "전체 정보 수정")
-    public CommonResponse<ModifyProfileAllDto.Response> modifyAll(@RequestBody ModifyProfileAllDto.Request request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
+    public CommonResponse<ModifyProfileAllDto.Response> modifyAll(@Valid @RequestBody ModifyProfileAllDto.Request request, @AuthenticationPrincipal PrincipalDetails principalDetails) {
         return CommonResponse.status(HttpStatus.OK).body(onBoardingService.modifyAll(request, principalDetails.getMember().getId()));
     }
 

@@ -9,6 +9,8 @@ import org.example.knockin.entity.member.Member;
 import org.example.knockin.entity.member.MemberRole;
 import org.example.knockin.entity.member.MemberState;
 import org.example.knockin.entity.member.State;
+import org.example.knockin.entity.member.BasicInformation;
+import org.example.knockin.entity.member.MemberPrivacyType;
 import org.example.knockin.entity.room.*;
 import org.example.knockin.dto.AuthResponse;
 import org.example.knockin.dto.OAuth2UserInfo;
@@ -22,8 +24,10 @@ import org.example.knockin.repository.member.BasicInformationRepository;
 import org.example.knockin.repository.member.MemberRepository;
 import org.example.knockin.repository.member.row.MatchingBasicInfoRow;
 import org.example.knockin.repository.member.row.MemberWithNameRow;
+import org.example.knockin.repository.member.row.ChattingRoomBasicInfoRow;
 import org.example.knockin.repository.member.StateRepository;
 import org.example.knockin.repository.room.RoomProfileRepository;
+import org.example.knockin.global.util.DateUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,6 +72,11 @@ public class MemberServiceImpl {
     public AuthResponse findMemberForLogin(Member member, String accessToken) {
         AuthResponse authResponse = memberRepository.findMemberInfo(member).orElseThrow(() -> new BusinessException(AuthErrorCode.MEMBER_NOT_FOUND));
         authResponse.setAccessToken(accessToken);
+        if (authResponse.getBirth() != null) {
+            authResponse.setMemberAge(DateUtils.calculateAge(authResponse.getBirth()));
+        }
+        authResponse.setProfileCompleted(authResponse.isBasicInfo());
+        authResponse.setPreferenceCompleted(authResponse.isPreferenceInfo());
         return authResponse;
     }
 
@@ -118,6 +127,7 @@ public class MemberServiceImpl {
                 .orElseThrow(() -> new BusinessException(MemberErrorCode.MEMBER_NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
     public MyProfileAllDto.Response findProfileAll(Member member) {
         List<MyProfileAllDto.Response.Lifestyle> lifestyles = memberRepository.findByLifePattern(member);
         List<MyProfileAllDto.Response.Region> regions = new ArrayList<>();
@@ -130,6 +140,13 @@ public class MemberServiceImpl {
         Integer maxDeposit = null;
         Integer minMounthRent = null;
         Integer maxMounthRent = null;
+        BasicInformation basicInformation = basicInformationRepository.findLatestBasicInformation(member).orElse(null);
+        ChattingRoomBasicInfoRow basicInfoRow = basicInformationRepository
+                .findChattingRoomBasicInfoRow(member.getId())
+                .orElse(null);
+        MemberPrivacyType visibility = member.getMemberPrivacy() == null
+                ? MemberPrivacyType.PRIVATE
+                : member.getMemberPrivacy().getType();
 
         RoomProfile roomProfileEntity = memberRepository.findByRoomProfile(member).orElse(null);
         if (roomProfileEntity != null) {
@@ -166,6 +183,15 @@ public class MemberServiceImpl {
         }
 
         return MyProfileAllDto.Response.builder()
+                .memberId(member.getId())
+                .name(basicInformation == null ? null : basicInformation.getName())
+                .birth(basicInformation == null ? null : basicInformation.getBirth())
+                .memberAge(basicInformation == null ? null : DateUtils.calculateAge(basicInformation.getBirth()))
+                .gender(basicInformation == null ? null : basicInformation.getGender())
+                .email(basicInformation == null ? null : basicInformation.getEmail())
+                .profileImageUrl(basicInfoRow == null ? null : basicInfoRow.profileImageUrl())
+                .visibility(visibility)
+                .profileCompleted(isOnBoarding(member))
                 .lifestyles(lifestyles)
                 .type(type)
                 .comeEnableAt(comeEnableAt)
@@ -189,6 +215,22 @@ public class MemberServiceImpl {
 
     public boolean isOnBoarding(Member member) {
         return roomProfileRepository.isExsitRoomProfile(member) && memberLifePatternRepository.isExsitLifeStyle(member) && basicInformationRepository.isExsitBasicInformation(member);
+    }
+
+    public boolean hasAnyOnboardingData(Member member) {
+        return hasRoomProfile(member) || hasLifestyle(member) || hasBasicInformation(member);
+    }
+
+    public boolean hasBasicInformation(Member member) {
+        return basicInformationRepository.isExsitBasicInformation(member);
+    }
+
+    public boolean hasLifestyle(Member member) {
+        return memberLifePatternRepository.isExsitLifeStyle(member);
+    }
+
+    public boolean hasRoomProfile(Member member) {
+        return roomProfileRepository.isExsitRoomProfile(member);
     }
 
     private String getFullRegionName(Region regionEntity) {

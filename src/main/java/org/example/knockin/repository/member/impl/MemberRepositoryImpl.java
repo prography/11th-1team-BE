@@ -19,6 +19,9 @@ import org.example.knockin.entity.auth.LoginProviderType;
 import org.example.knockin.entity.member.Member;
 import org.example.knockin.entity.member.MemberPrivacyType;
 import org.example.knockin.entity.member.MemberState;
+import org.example.knockin.entity.member.QBasicInformation;
+import org.example.knockin.entity.member.QState;
+import org.example.knockin.entity.file.QBasicInformationFile;
 import org.example.knockin.entity.room.Region;
 import org.example.knockin.entity.room.RoomOfferProfile;
 import org.example.knockin.entity.room.RoomProfile;
@@ -73,9 +76,19 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
     }
 
     public Optional<AuthResponse> findMemberInfo(Member memberEntity) {
+        // 기본 정보는 수정할 때마다 이력이 쌓인다. 로그인에서는 마지막 값 하나만 가져온다.
+        QBasicInformation latestBasicInformation = new QBasicInformation("loginLatestBasicInformation");
+        QBasicInformationFile latestBasicInformationFile = new QBasicInformationFile("loginLatestBasicInformationFile");
+        QState latestState = new QState("loginLatestState");
+
         AuthResponse response = jpaQueryFactory
                 .select(Projections.fields(AuthResponse.class,
+                        member.id.as("memberId"),
                         basicInformation.name.as("name"),
+                        basicInformation.birth.as("birth"),
+                        basicInformation.gender.as("gender"),
+                        file.savedFileName.as("profileImageUrl"),
+                        memberPrivacy.type.as("visibility"),
                         JPAExpressions.selectOne()
                                 .from(memberLifePattern)
                                 .where(memberLifePattern.member.eq(member))
@@ -104,8 +117,32 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom {
                                 state.rejectReason.as("reason")).as("deleteInfo")
                 ))
                 .from(member)
-                .leftJoin(basicInformation).on(basicInformation.member.eq(member))
-                .leftJoin(state).on(state.member.eq(member))
+                .leftJoin(basicInformation).on(
+                        basicInformation.id.eq(
+                                JPAExpressions
+                                        .select(latestBasicInformation.id.max())
+                                        .from(latestBasicInformation)
+                                        .where(latestBasicInformation.member.eq(member))
+                        )
+                )
+                .leftJoin(basicInformationFile).on(
+                        basicInformationFile.id.eq(
+                                JPAExpressions
+                                        .select(latestBasicInformationFile.id.max())
+                                        .from(latestBasicInformationFile)
+                                        .where(latestBasicInformationFile.basicInformation.eq(basicInformation))
+                        )
+                )
+                .leftJoin(basicInformationFile.file, file)
+                .leftJoin(state).on(
+                        state.id.eq(
+                                JPAExpressions
+                                        .select(latestState.id.max())
+                                        .from(latestState)
+                                        .where(latestState.member.eq(member))
+                        )
+                )
+                .leftJoin(memberPrivacy).on(memberPrivacy.member.eq(member))
                 .where(member.id.eq(memberEntity.getId()))
                 .fetchOne();
 

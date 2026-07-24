@@ -17,6 +17,7 @@ import java.util.Optional;
 import org.example.knockin.dto.ChatRequestDetailDto;
 import org.example.knockin.dto.ChatRequestListDto;
 import org.example.knockin.dto.ChatRequestDto;
+import org.example.knockin.dto.ChatRoomCreateDto;
 import org.example.knockin.entity.alarm.AlarmType;
 import org.example.knockin.entity.board.RoommateBoard;
 import org.example.knockin.entity.chat.ChattingRequired;
@@ -89,6 +90,9 @@ class ChatRequestServiceImplTest {
     @Mock
     private RoommateScoreService roommateScoreService;
 
+    @Mock
+    private ChatServiceImpl chatService;
+
     @InjectMocks
     private ChatRequestServiceImpl chatRequestService;
 
@@ -130,7 +134,8 @@ class ChatRequestServiceImplTest {
                 chattingRequiredAlarmService,
                 basicInformationService,
                 memberLifePatternService,
-                roommateScoreService
+                roommateScoreService,
+                chatService
         );
     }
 
@@ -580,19 +585,49 @@ class ChatRequestServiceImplTest {
         Member requester = Member.builder().id(requesterId).build();
         Member requestee = Member.builder().id(requesteeId).build();
         ChattingRequired chattingRequired = chatRequest(requester, requestee, ChattingRequiredStatus.PENDING);
+        LocalDateTime roomCreatedAt = LocalDateTime.of(2026, 7, 24, 12, 0);
 
         when(chattingRequiredRepository.findById(requestId)).thenReturn(Optional.of(chattingRequired));
         when(basicInformationRepository.findLatestBasicInformation(requestee))
                 .thenReturn(Optional.of(basicInformation(requestee, "이수현")));
+        when(chatService.getOrCreateChattingRoom(chattingRequired))
+                .thenReturn(ChatRoomCreateDto.Response.builder()
+                        .chatRoomId(3000L)
+                        .updatedAt(roomCreatedAt)
+                        .build());
 
         // When
         ChatRequestDto.Response response = chatRequestService.acceptRequired(requesteeId, requestId);
 
         // Then
         assertThat(chattingRequired.getStatus()).isEqualTo(ChattingRequiredStatus.ACCEPTED);
-        assertThat(response.getUpdatedAt()).isNotNull();
+        assertThat(response.getChatRoomId()).isEqualTo(3000L);
+        assertThat(response.getUpdatedAt()).isEqualTo(roomCreatedAt);
         assertChattingRequiredAlarm(requester, "이수현님이 매칭 요청을 수락했어요", chattingRequired);
         verify(alarmService).sendToClient(eq(requesterId), eq(AlarmType.CHATTING_REQUIRED.name()), any(ChattingRequiredAlarm.class));
+    }
+
+    @Test
+    @DisplayName("이미 수락한 채팅 요청을 다시 수락하면 기존 채팅방을 반환한다")
+    void acceptRequiredIsIdempotent() {
+        Long requestId = 1000L;
+        Long requesteeId = 2L;
+        ChattingRequired chattingRequired = chatRequest(
+                Member.builder().id(1L).build(),
+                Member.builder().id(requesteeId).build(),
+                ChattingRequiredStatus.ACCEPTED
+        );
+        when(chattingRequiredRepository.findById(requestId)).thenReturn(Optional.of(chattingRequired));
+        when(chatService.getOrCreateChattingRoom(chattingRequired))
+                .thenReturn(ChatRoomCreateDto.Response.builder()
+                        .chatRoomId(3000L)
+                        .updatedAt(LocalDateTime.of(2026, 7, 24, 12, 0))
+                        .build());
+
+        ChatRequestDto.Response response = chatRequestService.acceptRequired(requesteeId, requestId);
+
+        assertThat(response.getChatRoomId()).isEqualTo(3000L);
+        verifyNoInteractions(basicInformationRepository, chattingRequiredAlarmRepository, alarmService);
     }
 
     @Test

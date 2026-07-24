@@ -1,6 +1,9 @@
 package org.example.knockin.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,13 +21,17 @@ public class ModifyProfileLifeStyleDto {
     @NoArgsConstructor
     public static class Request {
         @Schema(description = "lifestyles")
+        @Valid
+        @NotEmpty
         private List<LifeStyleInfo> lifestyles;
 
         @Data
         public static class LifeStyleInfo {
             @Schema(description = "고유 식별 ID")
+            @NotNull
             private Long id;
             @Schema(description = "라이프스타일 id")
+            @NotNull
             private Long lifestyleId;
         }
     }

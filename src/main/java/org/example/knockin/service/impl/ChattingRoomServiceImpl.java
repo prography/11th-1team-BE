@@ -1,6 +1,7 @@
 package org.example.knockin.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.example.knockin.dto.ChatRoomListDto;
 import org.example.knockin.entity.chat.ChattingRequired;
@@ -38,5 +39,9 @@ public class ChattingRoomServiceImpl {
                 .chattingRequired(chattingRequired)
                 .build();
         return chattingRoomRepository.save(chattingRoom);
+    }
+
+    public Optional<ChattingRoom> findByChattingRequired(ChattingRequired chattingRequired) {
+        return chattingRoomRepository.findByChattingRequired(chattingRequired);
     }
 }

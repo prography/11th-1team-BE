@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.*;
 import org.example.knockin.entity.member.Member;
 import org.example.knockin.global.entity.CreatedAtEntity;
@@ -19,7 +20,13 @@ import org.example.knockin.global.entity.CreatedAtEntity;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "member_agreement")
+@Table(
+        name = "member_agreement",
+        uniqueConstraints = @UniqueConstraint(
+                name = "uk_member_agreement_log",
+                columnNames = {"member_id", "agreement_log_id"}
+        )
+)
 public class MemberAgreement extends CreatedAtEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

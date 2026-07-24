@@ -8,6 +8,7 @@ import org.example.knockin.dto.ChatRequestDetailDto;
 import org.example.knockin.dto.ChatRequestDetailDto.Response.Lifestyle;
 import org.example.knockin.dto.ChatRequestDetailDto.Response.MemberInfo;
 import org.example.knockin.dto.ChatRequestDto;
+import org.example.knockin.dto.ChatRoomCreateDto;
 import org.example.knockin.dto.ChatRequestListDto;
 import org.example.knockin.entity.board.RoommateBoard;
 import org.example.knockin.entity.chat.ChattingRequired;
@@ -43,6 +44,7 @@ public class ChatRequestServiceImpl {
     private final BasicInformationServiceImpl basicInformationService;
     private final MemberLifePatternService memberLifePatternService;
     private final RoommateScoreService roommateScoreService;
+    private final ChatServiceImpl chatService;
 
     @Transactional(readOnly = true)
     public List<ChatRequestListDto.Response> getPendingChatRequestList(Long memberId) {
@@ -180,11 +182,22 @@ public class ChatRequestServiceImpl {
         ChattingRequired required = chattingRequiredService.findByIdOrThrow(requestId);
 
         if (!memberId.equals(required.getRequestee().getId())) throw new BusinessException(RequiredErrorCode.CHATTING_ACCESS_DENIED);
+        if (required.getStatus() == ChattingRequiredStatus.ACCEPTED) {
+            return toAcceptedResponse(chatService.getOrCreateChattingRoom(required));
+        }
         if (!required.isPending()) throw new BusinessException(RequiredErrorCode.CHATTING_INVALID_STATUS);
 
         required.accept();
+        ChatRoomCreateDto.Response chatRoom = chatService.getOrCreateChattingRoom(required);
         sendAlarm(required.getRequester(), required.getRequestee(), required);
-        return new ChatRequestDto.Response(LocalDateTime.now());
+        return toAcceptedResponse(chatRoom);
+    }
+
+    private ChatRequestDto.Response toAcceptedResponse(ChatRoomCreateDto.Response chatRoom) {
+        return ChatRequestDto.Response.builder()
+                .chatRoomId(chatRoom.getChatRoomId())
+                .updatedAt(chatRoom.getUpdatedAt())
+                .build();
     }
 
     @Transactional

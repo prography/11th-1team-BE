@@ -11,8 +11,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,10 +41,9 @@ public class AlarmController {
         return CommonResponse.status(HttpStatus.OK).body(alarmService.modifyAllAlarmRead(principalDetails.getMember().getId()));
     }
 
-    @GetMapping("/subscribe")
+    @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Operation(summary = "알림 구독 처리")
-    public CommonResponse<AlarmSubscribeDto.Response> subscribeAlarm(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        return CommonResponse.status(HttpStatus.OK).body(AlarmSubscribeDto.Response.builder().sseEmitter(alarmService.subscribe(principalDetails.getMember().getId())).build());
+    public SseEmitter subscribeAlarm(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        return alarmService.subscribe(principalDetails.getMember().getId());
     }
 }
-

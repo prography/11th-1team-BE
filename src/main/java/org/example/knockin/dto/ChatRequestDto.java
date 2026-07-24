@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -22,7 +23,13 @@ public class ChatRequestDto {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+    @Builder
     public static class Response {
+        private Long chatRoomId;
         private LocalDateTime updatedAt;
+
+        public Response(LocalDateTime updatedAt) {
+            this(null, updatedAt);
+        }
     }
 }

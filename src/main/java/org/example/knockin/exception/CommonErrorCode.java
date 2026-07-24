@@ -12,7 +12,8 @@ public enum CommonErrorCode implements ErrorCode {
     METHOD_NOT_ALLOWED(3002, HttpStatus.METHOD_NOT_ALLOWED, "지원하지 않는 HTTP 메서드입니다."),
     UNSUPPORTED_MEDIA_TYPE(3003, HttpStatus.UNSUPPORTED_MEDIA_TYPE, "지원하지 않는 Content-Type입니다."),
     ACCESS_DENIED(3004, HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
-    INTERNAL_SERVER_ERROR(3005, HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다.");
+    INTERNAL_SERVER_ERROR(3005, HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다."),
+    CONFLICT(3006, HttpStatus.CONFLICT, "이미 처리된 데이터이거나 중복된 요청입니다.");
 
     private final Integer no;
     private final HttpStatus httpStatus;

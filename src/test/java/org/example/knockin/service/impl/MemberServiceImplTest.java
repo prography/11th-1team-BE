@@ -22,6 +22,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
+import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -55,6 +57,29 @@ class MemberServiceImplTest {
 
     @InjectMocks
     private MemberServiceImpl memberService;
+
+    @Test
+    @DisplayName("로그인 응답에 회원 정보와 완료 상태를 채운다")
+    void findMemberForLoginReturnsIdentityAndCompletionFlags() {
+        Member member = Member.builder().id(1L).build();
+        AuthResponse stored = AuthResponse.builder()
+                .memberId(1L)
+                .name("테스터")
+                .birth(LocalDate.of(2000, 1, 1))
+                .basicInfo(true)
+                .preferenceInfo(true)
+                .build();
+        given(memberRepository.findMemberInfo(member)).willReturn(Optional.of(stored));
+
+        AuthResponse response = memberService.findMemberForLogin(member, "access-token");
+
+        assertThat(response.getAccessToken()).isEqualTo("access-token");
+        assertThat(response.getMemberId()).isEqualTo(1L);
+        assertThat(response.getName()).isEqualTo("테스터");
+        assertThat(response.getMemberAge()).isPositive();
+        assertThat(response.isProfileCompleted()).isTrue();
+        assertThat(response.isPreferenceCompleted()).isTrue();
+    }
 
     @Test
     @DisplayName("백오피스 회원 목록 조회 성공 테스트")

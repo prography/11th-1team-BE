@@ -106,7 +106,7 @@ class AlarmServiceImplTest {
     }
 
     @Test
-    @DisplayName("알림 전송 실패 시 BusinessException 발생 및 Emitter 제거 테스트")
+    @DisplayName("알림 전송 실패 시 Emitter를 제거하고 저장 트랜잭션은 유지한다")
     void sendToClientFailureTest() throws IOException {
         // given
         Long memberId = 1L;
@@ -128,12 +128,31 @@ class AlarmServiceImplTest {
         Map<Long, SseEmitter> map = (Map<Long, SseEmitter>) ReflectionTestUtils.getField(alarmService, "sseEmitterMap");
         map.put(memberId, mockEmitter);
 
-        // when & then
-        assertThatThrownBy(() -> alarmService.sendToClient(memberId, eventName, alarm))
-                .isInstanceOf(BusinessException.class)
-                .hasFieldOrPropertyWithValue("errorCode", AlarmErrorCode.ALARM_SEND_ERROR);
+        // when
+        alarmService.sendToClient(memberId, eventName, alarm);
 
+        // then
         assertThat(map).doesNotContainKey(memberId);
+        verify(alarmRepository).save(alarm);
+        verify(mockEmitter).complete();
+    }
+
+    @Test
+    @DisplayName("접속한 구독자가 없어도 알림은 저장된다")
+    void sendToClientWithoutSubscriberStillSavesAlarm() {
+        Long memberId = 1L;
+        Alarm alarm = Alarm.builder()
+                .id(100L)
+                .title("Test Title")
+                .contents("Test Contents")
+                .isRead(false)
+                .expiredAt(LocalDateTime.now().plusDays(1))
+                .type(AlarmType.DEFAULT)
+                .build();
+
+        alarmService.sendToClient(memberId, "testEvent", alarm);
+
+        verify(alarmRepository).save(alarm);
     }
 
     @Test

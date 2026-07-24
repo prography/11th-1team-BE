@@ -1,6 +1,8 @@
 package org.example.knockin.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +20,8 @@ public class SaveProfileLifeStyleDto {
     @NoArgsConstructor
     public static class Request {
         @Schema(description = "lifestyles")
-        private List<Long> lifestyles;
+        @NotEmpty
+        private List<@NotNull Long> lifestyles;
     }
 
     @Data

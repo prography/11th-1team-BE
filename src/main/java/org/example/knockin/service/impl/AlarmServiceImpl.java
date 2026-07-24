@@ -44,6 +44,10 @@ public class AlarmServiceImpl {
     public void sendToClient(Long memberId, String eventName, Alarm alarm) {
         alarmRepository.save(alarm);
         SseEmitter sseEmitter = sseEmitterMap.get(memberId);
+        // 앱이 연결되어 있지 않아도 알림 저장 자체는 성공해야 한다.
+        if (sseEmitter == null) {
+            return;
+        }
         try {
             String eventId = memberId + "_" + System.currentTimeMillis();
             AlarmSendDto.Response response = AlarmSendDto.Response.builder()
@@ -55,7 +59,8 @@ public class AlarmServiceImpl {
             sseEmitter.send(SseEmitter.event().id(eventId).name(eventName).data(response));
         } catch (IOException e) {
             sseEmitterMap.remove(memberId);
-            throw new BusinessException(AlarmErrorCode.ALARM_SEND_ERROR);
+            // 끊긴 SSE 때문에 채팅 요청 같은 원래 작업까지 롤백시키지 않는다.
+            sseEmitter.complete();
         }
     }
 

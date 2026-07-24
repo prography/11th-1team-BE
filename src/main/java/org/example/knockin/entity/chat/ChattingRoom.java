@@ -29,6 +29,6 @@ public class ChattingRoom extends CreatedAtEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chatting_required_id", nullable = false)
+    @JoinColumn(name = "chatting_required_id", nullable = false, unique = true)
     private ChattingRequired chattingRequired;
 }

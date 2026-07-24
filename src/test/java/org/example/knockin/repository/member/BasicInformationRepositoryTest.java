@@ -17,6 +17,11 @@ import org.example.knockin.entity.member.BasicInformation;
 import org.example.knockin.entity.member.Gender;
 import org.example.knockin.entity.member.Member;
 import org.example.knockin.entity.member.MemberRole;
+import org.example.knockin.entity.member.MemberState;
+import org.example.knockin.entity.member.State;
+import org.example.knockin.entity.member.MemberPrivacy;
+import org.example.knockin.entity.member.MemberPrivacyType;
+import org.example.knockin.dto.AuthResponse;
 import org.example.knockin.repository.member.row.ChattingRoomBasicInfoRow;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,7 +41,47 @@ class BasicInformationRepositoryTest {
     private BasicInformationRepository basicInformationRepository;
 
     @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
     private EntityManager entityManager;
+
+    @Test
+    @DisplayName("로그인 회원 조회는 기본 정보가 여러 건이어도 최신 정보 한 건을 반환한다")
+    void findMemberInfoReturnsLatestBasicInformation() {
+        Member member = persistMember("login-member");
+        BasicInformation oldInfo = persistBasicInformation(
+                member,
+                "이전이름",
+                LocalDate.of(1998, 1, 1),
+                Gender.MALE
+        );
+        persistBasicInformationFile(oldInfo, "old-profile.jpg");
+        BasicInformation latestInfo = persistBasicInformation(
+                member,
+                "최신이름",
+                LocalDate.of(2000, 2, 2),
+                Gender.FEMALE
+        );
+        persistBasicInformationFile(latestInfo, "latest-profile.jpg");
+        entityManager.persist(State.builder().member(member).states(MemberState.ACTIVE).build());
+        entityManager.persist(MemberPrivacy.builder()
+                .member(member)
+                .type(MemberPrivacyType.PUBLIC)
+                .build());
+        entityManager.flush();
+        entityManager.clear();
+
+        Optional<AuthResponse> response = memberRepository.findMemberInfo(member);
+
+        assertThat(response).isPresent();
+        assertThat(response.get().getMemberId()).isEqualTo(member.getId());
+        assertThat(response.get().getName()).isEqualTo("최신이름");
+        assertThat(response.get().getBirth()).isEqualTo(LocalDate.of(2000, 2, 2));
+        assertThat(response.get().getGender()).isEqualTo(Gender.FEMALE);
+        assertThat(response.get().getProfileImageUrl()).isEqualTo("latest-profile.jpg");
+        assertThat(response.get().getVisibility()).isEqualTo(MemberPrivacyType.PUBLIC);
+    }
 
     @Test
     @DisplayName("채팅 요청 상세 기본 정보 목록은 회원별 최신 기본 정보와 최신 프로필 이미지를 반환한다")

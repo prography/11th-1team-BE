@@ -10,6 +10,7 @@ import org.example.knockin.entity.member.MemberPrivacy;
 import org.example.knockin.entity.member.MemberPrivacyType;
 import org.example.knockin.entity.room.*;
 import org.example.knockin.exception.BusinessException;
+import org.example.knockin.exception.OnBoardErrorCode;
 import org.example.knockin.service.RoommateBoardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -102,6 +103,8 @@ class OnBoardingServiceImplTest {
     void saveRoomInfoLogic_Offer_Success() {
         SaveProfileRoomInfoDto.Request request = SaveProfileRoomInfoDto.Request.builder()
                 .type(RoomProfileType.OFFER)
+                .deposit(500)
+                .mounthRent(50)
                 .region(List.of(1L))
                 .roomProfile(List.of(1L))
                 .build();
@@ -122,6 +125,10 @@ class OnBoardingServiceImplTest {
     void saveRoomInfoLogic_Seeker_Success() {
         SaveProfileRoomInfoDto.Request request = SaveProfileRoomInfoDto.Request.builder()
                 .type(RoomProfileType.SEEKER)
+                .minDeposit(100)
+                .maxDeposit(500)
+                .minMounthRent(10)
+                .maxMounthRent(50)
                 .region(List.of(1L))
                 .roomProfile(List.of(1L))
                 .build();
@@ -137,6 +144,29 @@ class OnBoardingServiceImplTest {
         verify(roomSeekerProfileRegionService).saveAll(any());
         verify(roomTypeService).saveSeekerRoomTypeAll(any());
     }
+
+    @Test
+    @DisplayName("방 정보 저장 시 최소 금액이 최대 금액보다 크면 거부한다")
+    void saveRoomInfoLogic_RejectsInvalidRange() {
+        SaveProfileRoomInfoDto.Request request = SaveProfileRoomInfoDto.Request.builder()
+                .type(RoomProfileType.SEEKER)
+                .minDeposit(500)
+                .maxDeposit(100)
+                .minMounthRent(50)
+                .maxMounthRent(10)
+                .region(List.of(1L))
+                .roomProfile(List.of(1L))
+                .build();
+
+        assertThatThrownBy(() -> onBoardingService.saveRoomInfoLogic(request, memberId))
+                .isInstanceOfSatisfying(
+                        BusinessException.class,
+                        exception -> assertThat(exception.getErrorCode())
+                                .isEqualTo(OnBoardErrorCode.ONBOARD_PROFILE_VALIDATION_FAIL)
+                );
+
+        verifyNoInteractions(roomProfileService, roomTypeService, roomSeekerProfileRegionService);
+    }
  
     @Test
     @DisplayName("전체 프로필 저장 성공 테스트")
@@ -147,6 +177,8 @@ class OnBoardingServiceImplTest {
         request.setLifestyles(List.of(1L));
         request.setRegion(List.of(1L));
         request.setRoomProfile(List.of(1L));
+        request.setDeposit(1000);
+        request.setMounthRent(50);
  
         given(basicInformationService.save(any())).willReturn(mock(BasicInformation.class));
         given(metaService.findByAgreementLogIsCurrent(any())).willReturn(List.of(mock(AgreementLog.class)));
@@ -164,6 +196,30 @@ class OnBoardingServiceImplTest {
         verify(memberLifePatternService).saveMemberLifePatternAll(any());
         verify(roomProfileService).save(any(RoomOfferProfile.class));
     }
+
+    @Test
+    @DisplayName("이미 온보딩 데이터가 있으면 전체 프로필을 중복 저장하지 않는다")
+    void saveAll_RejectsDuplicateProfile() {
+        SaveProfileAllDto.Request request = new SaveProfileAllDto.Request();
+        request.setType(RoomProfileType.OFFER);
+        request.setDeposit(1000);
+        request.setMounthRent(50);
+        given(memberService.hasAnyOnboardingData(member)).willReturn(true);
+
+        assertThatThrownBy(() -> onBoardingService.saveAll(request, memberId))
+                .isInstanceOfSatisfying(
+                        BusinessException.class,
+                        exception -> assertThat(exception.getErrorCode())
+                                .isEqualTo(OnBoardErrorCode.ONBOARD_PROFILE_ALREADY_EXISTS)
+                );
+
+        verifyNoInteractions(
+                basicInformationService,
+                memberAgreementService,
+                memberLifePatternService,
+                roomProfileService
+        );
+    }
  
     @Test
     @DisplayName("기본 정보 수정 성공 테스트")
@@ -174,7 +230,7 @@ class OnBoardingServiceImplTest {
                 .build();
  
         BasicInformation basicInfo = mock(BasicInformation.class);
-        given(basicInformationService.findByMember(member)).willReturn(List.of(basicInfo));
+        given(basicInformationService.findLatestBasicInformation(member)).willReturn(basicInfo);
         given(metaService.findByAgreementLogIsCurrent(any())).willReturn(List.of(mock(AgreementLog.class)));
         given(memberAgreementService.findByMember(member)).willReturn(Collections.emptyList());
  
@@ -248,6 +304,10 @@ class OnBoardingServiceImplTest {
     void modifyRoomInfoLogic_Switch_Success() {
         ModifyProfileRoomInfoDto.Request request = ModifyProfileRoomInfoDto.Request.builder()
                 .type(RoomProfileType.SEEKER)
+                .minDeposit(100)
+                .maxDeposit(500)
+                .minMounthRent(10)
+                .maxMounthRent(50)
                 .region(List.of(1L))
                 .roomProfile(List.of(1L))
                 .build();
