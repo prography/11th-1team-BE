@@ -11,6 +11,7 @@ import org.example.knockin.exception.AuthException;
 import org.example.knockin.auth.util.PrincipalMemberResolver;
 import org.example.knockin.auth.util.TokenConstants;
 import org.example.knockin.auth.util.TokenProvider;
+import org.example.knockin.exception.BusinessException;
 import org.example.knockin.service.impl.ChatRoomMemberServiceImpl;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -47,6 +48,12 @@ public class StompAuthenticationChannelInterceptor implements ChannelInterceptor
             }
         } catch (AuthException e) {
             log.warn("STOMP 인증 실패 [{}]: {}", e.getErrorCode().name(), e.getErrorCode().getMessage());
+            throw e;
+        } catch (BusinessException e) {
+            log.warn("STOMP 인가 실패 [{}]: {}", e.getErrorCode().name(), e.getErrorCode().getMessage());
+            throw e;
+        } catch (RuntimeException e) {
+            log.warn("그 외 실패 [{}]: {}", e.getMessage());
             throw e;
         }
 
