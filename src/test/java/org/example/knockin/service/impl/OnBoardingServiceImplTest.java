@@ -5,6 +5,7 @@ import org.example.knockin.entity.agreement.AgreementLog;
 import org.example.knockin.entity.agreement.MemberAgreement;
 import org.example.knockin.entity.life.*;
 import org.example.knockin.entity.member.BasicInformation;
+import org.example.knockin.entity.member.Gender;
 import org.example.knockin.entity.member.Member;
 import org.example.knockin.entity.member.MemberPrivacy;
 import org.example.knockin.entity.member.MemberPrivacyType;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.LocalDate;
 import java.util.*;
  
 import static org.assertj.core.api.Assertions.assertThat;
@@ -64,19 +66,30 @@ class OnBoardingServiceImplTest {
     @Test
     @DisplayName("기본 정보 저장 성공 테스트")
     void saveBasicInfoLogic_Success() {
+        LocalDate birth = LocalDate.of(2000, 1, 1);
         SaveProfileBasicDto.Request request = SaveProfileBasicDto.Request.builder()
-                .name("홍길동")
+                .birth(birth)
+                .gender(Gender.MALE)
                 .terms(List.of(1L))
                 .build();
  
-        given(basicInformationService.save(any(BasicInformation.class))).willReturn(mock(BasicInformation.class));
+        BasicInformation basicInformation = BasicInformation.builder()
+                .member(member)
+                .name("SSO 이름")
+                .email("sso@example.com")
+                .build();
+        given(basicInformationService.findByMember(member)).willReturn(List.of(basicInformation));
         given(metaService.findByAgreementLogIsCurrent(any())).willReturn(List.of(mock(AgreementLog.class)));
         given(memberAgreementService.saveAll(any())).willReturn(List.of(mock(MemberAgreement.class)));
  
         SaveProfileBasicDto.Response response = onBoardingService.saveBasicInfoLogic(request, memberId);
  
         assertThat(response).isNotNull();
-        verify(basicInformationService).save(any(BasicInformation.class));
+        assertThat(basicInformation.getName()).isEqualTo("SSO 이름");
+        assertThat(basicInformation.getEmail()).isEqualTo("sso@example.com");
+        assertThat(basicInformation.getBirth()).isEqualTo(birth);
+        assertThat(basicInformation.getGender()).isEqualTo(Gender.MALE);
+        verify(basicInformationService, never()).save(any(BasicInformation.class));
         verify(memberAgreementService).saveAll(any());
         verify(memberPrivacyService).save(any());
     }
@@ -85,7 +98,8 @@ class OnBoardingServiceImplTest {
     @DisplayName("기본 정보 저장 성공 테스트 (이미 존재할 시 업데이트)")
     void saveBasicInfoLogic_Upsert_Success() {
         SaveProfileBasicDto.Request request = SaveProfileBasicDto.Request.builder()
-                .name("이몽룡")
+                .birth(LocalDate.of(1999, 12, 31))
+                .gender(Gender.FEMALE)
                 .terms(List.of(1L))
                 .build();
 
@@ -103,7 +117,8 @@ class OnBoardingServiceImplTest {
         SaveProfileBasicDto.Response response = onBoardingService.saveBasicInfoLogic(request, memberId);
 
         assertThat(response).isNotNull();
-        verify(existingBasic).modifyBasicInformation(any());
+        verify(existingBasic).modifyOnboardingInformation(
+                LocalDate.of(1999, 12, 31), Gender.FEMALE);
         verify(basicInformationService, never()).save(any(BasicInformation.class));
     }
 
@@ -174,7 +189,8 @@ class OnBoardingServiceImplTest {
         request.setRegion(List.of(1L));
         request.setRoomProfile(List.of(1L));
  
-        given(basicInformationService.save(any(BasicInformation.class))).willReturn(mock(BasicInformation.class));
+        BasicInformation basicInformation = mock(BasicInformation.class);
+        given(basicInformationService.findByMember(member)).willReturn(List.of(basicInformation));
         given(metaService.findByAgreementLogIsCurrent(any())).willReturn(List.of(mock(AgreementLog.class)));
         given(memberAgreementService.saveAll(any())).willReturn(List.of(mock(MemberAgreement.class)));
         given(metaService.findByLifeStyle(any())).willReturn(List.of(mock(LifePatternInformation.class)));
@@ -186,7 +202,8 @@ class OnBoardingServiceImplTest {
         SaveProfileAllDto.Response response = onBoardingService.saveAll(request, memberId);
  
         assertThat(response).isNotNull();
-        verify(basicInformationService).save(any(BasicInformation.class));
+        verify(basicInformation).modifyOnboardingInformation(request.getBirth(), request.getGender());
+        verify(basicInformationService, never()).save(any(BasicInformation.class));
         verify(memberLifePatternService).saveMemberLifePatternAll(any());
         verify(roomProfileService).save(any(RoomOfferProfile.class));
     }
@@ -195,7 +212,8 @@ class OnBoardingServiceImplTest {
     @DisplayName("기본 정보 수정 성공 테스트")
     void modifyBasicInfoLogic_Success() {
         ModifyProfileBasicDto.Request request = ModifyProfileBasicDto.Request.builder()
-                .name("이몽룡")
+                .birth(LocalDate.of(2001, 5, 20))
+                .gender(Gender.FEMALE)
                 .terms(List.of(1L))
                 .build();
 
@@ -205,7 +223,7 @@ class OnBoardingServiceImplTest {
         ModifyProfileBasicDto.Response response = onBoardingService.modifyBasicInfoLogic(request, memberId, null);
 
         assertThat(response).isNotNull();
-        verify(basicInfo).modifyBasicInformation(request);
+        verify(basicInfo).modifyOnboardingInformation(request.getBirth(), request.getGender());
     }
  
     @Test

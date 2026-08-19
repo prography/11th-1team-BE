@@ -3,6 +3,7 @@ package org.example.knockin.auth.service;
 import lombok.RequiredArgsConstructor;
 import org.example.knockin.entity.member.Member;
 import org.example.knockin.auth.util.OAuth2UserInfoProvider;
+import org.example.knockin.dto.AppleUserInfo;
 import org.example.knockin.dto.OAuth2UserInfo;
 import org.example.knockin.dto.PrincipalDetails;
 import org.example.knockin.exception.AuthErrorCode;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -29,29 +31,52 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        Map<String, Object> oAuth2UserAttributes;
-
         if (OAuth2UserInfoProvider.APPLE.getRegistrationId().equalsIgnoreCase(registrationId)) {
-            String idToken = (String) userRequest.getAdditionalParameters().get("id_token");
-            if (idToken == null || idToken.isBlank()) {
-                idToken = userRequest.getAccessToken().getTokenValue();
-            }
-
-            oAuth2UserAttributes = decodeJwtPayload(idToken);
-        } else {
-            oAuth2UserAttributes = super.loadUser(userRequest).getAttributes();
+            return loadAppleUser(userRequest, additionalParameter(userRequest, AppleUserInfo.NAME_PARAMETER), additionalParameter(userRequest, AppleUserInfo.EMAIL_PARAMETER));
         }
 
+        Map<String, Object> attributes = super.loadUser(userRequest).getAttributes();
+        Class<? extends OAuth2UserInfo> infoClass = OAuth2UserInfoProvider
+                .findByRegistrationId(registrationId)
+                .getInfoClass();
+        OAuth2UserInfo userInfo = objectMapper.convertValue(attributes, infoClass);
+        return createPrincipal(userRequest, attributes, userInfo);
+    }
+
+    @Transactional
+    public OAuth2User loadAppleUser(OAuth2UserRequest userRequest, String name, String email) {
+        String idToken = additionalParameter(userRequest, "id_token");
+        if (idToken == null || idToken.isBlank()) {
+            idToken = userRequest.getAccessToken().getTokenValue();
+        }
+
+        Map<String, Object> claims = decodeJwtPayload(idToken);
+        AppleUserInfo userInfo = objectMapper.convertValue(claims, AppleUserInfo.class);
+        userInfo.merge(name, email);
+
+        Map<String, Object> attributes = new HashMap<>(claims);
+        if (userInfo.getName() != null) {
+            attributes.put("name", userInfo.getName());
+        }
+        if (userInfo.getEmail() != null) {
+            attributes.put("email", userInfo.getEmail());
+        }
+        return createPrincipal(userRequest, attributes, userInfo);
+    }
+
+    private OAuth2User createPrincipal(OAuth2UserRequest userRequest, Map<String, Object> attributes, OAuth2UserInfo userInfo) {
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
         if (userNameAttributeName == null ||userNameAttributeName.isBlank()) {
             userNameAttributeName = "sub";
         }
 
-        Class<? extends OAuth2UserInfo> infoClass = OAuth2UserInfoProvider.findByRegistrationId(registrationId).getInfoClass();
-        OAuth2UserInfo oAuth2UserInfo = objectMapper.convertValue(oAuth2UserAttributes, infoClass);
-        Member member = memberService.getOrSave(oAuth2UserInfo);
+        Member member = memberService.getOrSave(userInfo);
+        return new PrincipalDetails(member, attributes, userNameAttributeName);
+    }
 
-        return new PrincipalDetails(member, oAuth2UserAttributes, userNameAttributeName);
+    private String additionalParameter(OAuth2UserRequest userRequest, String key) {
+        Object value = userRequest.getAdditionalParameters().get(key);
+        return value instanceof String text ? text : null;
     }
 
     private Map<String, Object> decodeJwtPayload(String jwtToken) {

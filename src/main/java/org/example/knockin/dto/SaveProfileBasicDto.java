@@ -1,12 +1,9 @@
 package org.example.knockin.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,10 +22,6 @@ public class SaveProfileBasicDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Request {
-        @Schema(description = "이름")
-        @NotBlank
-        @Size(max = 10)
-        private String name;
         @Schema(description = "birth")
         @NotNull
         @Past
@@ -36,11 +29,6 @@ public class SaveProfileBasicDto {
         @Schema(description = "gender")
         @NotNull
         private Gender gender;
-        @Schema(description = "이메일")
-        @NotBlank
-        @Email
-        @Size(max = 50)
-        private String email;
         @Schema(description = "약관")
         @NotEmpty
         private List<Long> terms;

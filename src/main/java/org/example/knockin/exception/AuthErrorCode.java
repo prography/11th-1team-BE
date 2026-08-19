@@ -21,6 +21,7 @@ public enum AuthErrorCode implements ErrorCode {
     ACCESS_TOKEN_OMISSION(12, HttpStatus.UNAUTHORIZED, "Access Token이 누락되었습니다."),
     APPLE_CLIENT_SECRET_MAKE_FAIL(13, HttpStatus.UNAUTHORIZED, "Apple client_secret 생성 실패했습니다."),
     MEMBER_IS_DELETE(14, HttpStatus.UNAUTHORIZED, "이용이 정지된 계정입니다. "),
+    SSO_USER_INFO_OMISSION(15, HttpStatus.UNAUTHORIZED, "소셜 로그인에서 이름 또는 이메일을 받지 못했습니다."),
     ;
 
     private final Integer no;

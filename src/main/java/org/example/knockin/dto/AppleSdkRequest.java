@@ -23,11 +23,23 @@ public class AppleSdkRequest implements OAuth2SdkRequest {
 
         @JsonProperty("refresh_token")
         private String refreshToken;
+
+        private String name;
+
+        private String email;
     }
 
     @Override
     public String getAccessToken() {
         return (authObj != null) ? authObj.getAccessToken() : null;
+    }
+
+    public String getName() {
+        return (authObj != null) ? authObj.getName() : null;
+    }
+
+    public String getEmail() {
+        return (authObj != null) ? authObj.getEmail() : null;
     }
 }
 

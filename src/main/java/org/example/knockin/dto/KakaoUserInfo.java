@@ -52,6 +52,20 @@ public class KakaoUserInfo implements OAuth2UserInfo {
     }
 
     @Override
+    public String getName() {
+        if (kakaoAccount != null && kakaoAccount.getProfile() != null
+                && kakaoAccount.getProfile().getNickname() != null) {
+            return kakaoAccount.getProfile().getNickname();
+        }
+        return properties != null ? properties.getNickname() : null;
+    }
+
+    @Override
+    public String getEmail() {
+        return kakaoAccount != null ? kakaoAccount.getEmail() : null;
+    }
+
+    @Override
     public LoginProviderType getProviderType() {
         return LoginProviderType.KAKAO;
     }

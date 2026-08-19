@@ -1,6 +1,7 @@
 package org.example.knockin.config;
 
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.example.knockin.auth.repository.HttpCookieOAuth2AuthorizationRequestRepository;
 import org.example.knockin.entity.member.MemberRole;
@@ -25,7 +26,10 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
@@ -58,7 +62,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(customAuthenticationEntryPoint).accessDeniedHandler(customAccessDeniedHandler))
                 .oauth2Login(oauth -> oauth
-                        .authorizationEndpoint(auth -> auth.authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
+                        .authorizationEndpoint(auth -> auth
+                                .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)
+                                .authorizationRequestResolver(appleScopeAuthorizationRequestResolver()))
                         .tokenEndpoint(token -> token.accessTokenResponseClient(appleOAuth2AccessTokenResponseClient))
                         .userInfoEndpoint(c -> c.userService(customOAuth2UserService))
                         .successHandler(oAuth2SuccessHandler)
@@ -100,6 +106,20 @@ public class SecurityConfig {
                 ).permitAll()
                 .requestMatchers("/bo/**").hasAuthority(MemberRole.ADMIN.name()).anyRequest().authenticated())
                 .build();
+    }
+
+    private OAuth2AuthorizationRequestResolver appleScopeAuthorizationRequestResolver() {
+        DefaultOAuth2AuthorizationRequestResolver resolver =
+                new DefaultOAuth2AuthorizationRequestResolver(
+                        clientRegistrationRepository,
+                        OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI);
+        resolver.setAuthorizationRequestCustomizer(builder -> builder.attributes(attributes -> {
+            Object registrationId = attributes.get(OAuth2ParameterNames.REGISTRATION_ID);
+            if ("apple".equalsIgnoreCase(String.valueOf(registrationId))) {
+                builder.scopes(Set.of("name", "email"));
+            }
+        }));
+        return resolver;
     }
 
     @Bean

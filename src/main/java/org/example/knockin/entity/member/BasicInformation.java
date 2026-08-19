@@ -15,7 +15,6 @@ import jakarta.persistence.Table;
 import java.time.LocalDate;
 
 import lombok.*;
-import org.example.knockin.dto.ModifyProfileBasicDto;
 import org.example.knockin.global.entity.BaseEntity;
 
 import org.hibernate.annotations.OnDelete;
@@ -37,23 +36,30 @@ public class BasicInformation extends BaseEntity {
     @JoinColumn(name = "member_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE) private Member member;
 
-    @Column(name = "name", nullable = false, length = 10)
+    @Column(name = "name", length = 100)
     private String name;
 
-    @Column(name = "birth", nullable = false)
+    @Column(name = "birth")
     private LocalDate birth;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "gender", nullable = false, length = 20)
+    @Column(name = "gender", length = 20)
     private Gender gender;
 
-    @Column(name = "email", nullable = false, length = 50)
+    @Column(name = "email", length = 254)
     private String email;
 
-    public void modifyBasicInformation(ModifyProfileBasicDto.Request request) {
-        this.name = request.getName();
-        this.birth = request.getBirth();
-        this.gender = request.getGender();
-        this.email = request.getEmail();
+    public void modifyOnboardingInformation(LocalDate birth, Gender gender) {
+        this.birth = birth;
+        this.gender = gender;
+    }
+
+    public void fillSocialInformation(String name, String email) {
+        if (this.name == null || this.name.isBlank()) {
+            this.name = name;
+        }
+        if (this.email == null || this.email.isBlank()) {
+            this.email = email;
+        }
     }
 }

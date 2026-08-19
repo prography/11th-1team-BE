@@ -10,9 +10,11 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.knockin.dto.OAuth2SdkRequest;
+import org.example.knockin.dto.AppleSdkRequest;
 import org.example.knockin.auth.handler.OAuth2FailureHandler;
 import org.example.knockin.auth.handler.OAuth2SuccessHandler;
 import org.example.knockin.auth.util.OAuth2SdkProvider;
+import org.example.knockin.auth.service.CustomOAuth2UserService;
 import org.example.knockin.exception.AuthErrorCode;
 import org.example.knockin.exception.AuthException;
 import org.springframework.http.HttpMethod;
@@ -23,7 +25,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -36,7 +37,7 @@ import tools.jackson.databind.ObjectMapper;
 @RequiredArgsConstructor
 public class CustomOAuth2Filter extends OncePerRequestFilter {
     private final ClientRegistrationRepository clientRegistrationRepository;
-    private final DefaultOAuth2UserService oAuth2UserService;
+    private final CustomOAuth2UserService oAuth2UserService;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
     private final String LOGIN_PATTERN = "/sdk/oauth2/authorization/{registrationId}";
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -75,7 +76,12 @@ public class CustomOAuth2Filter extends OncePerRequestFilter {
                 );
 
                 OAuth2UserRequest userRequest = new OAuth2UserRequest(clientRegistration, oauth2Token);
-                OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
+                OAuth2User oAuth2User;
+                if (sdkRequest instanceof AppleSdkRequest appleSdkRequest) {
+                    oAuth2User = oAuth2UserService.loadAppleUser(userRequest, appleSdkRequest.getName(), appleSdkRequest.getEmail());
+                } else {
+                    oAuth2User = oAuth2UserService.loadUser(userRequest);
+                }
 
                 OAuth2AuthenticationToken authentication = new OAuth2AuthenticationToken(
                         oAuth2User,

@@ -13,6 +13,7 @@ import org.example.knockin.entity.room.*;
 import org.example.knockin.dto.AuthResponse;
 import org.example.knockin.dto.OAuth2UserInfo;
 import org.example.knockin.exception.AuthErrorCode;
+import org.example.knockin.exception.AuthException;
 import org.example.knockin.auth.service.Oauth2DeleteFactory;
 import org.example.knockin.exception.BusinessException;
 import org.example.knockin.exception.MemberErrorCode;
@@ -55,22 +56,70 @@ public class MemberServiceImpl {
 
     @Transactional
     public Member getOrSave(OAuth2UserInfo oAuth2UserInfo) {
-        String providerId = String.valueOf(oAuth2UserInfo.getId());
-        return memberRepository.findMemberByProvider(providerId, oAuth2UserInfo.getProviderType())
-                .orElseGet(() -> {
-                    Member newMember = Member.builder()
-                            .providerType(oAuth2UserInfo.getProviderType())
-                            .providerId(String.valueOf(oAuth2UserInfo.getId()))
-                            .role(MemberRole.USER)
-                            .isDelete(false)
-                            .build();
+        String providerId = oAuth2UserInfo.getId();
+        Optional<Member> existingMember = memberRepository.findMemberByProvider(providerId, oAuth2UserInfo.getProviderType());
 
-                    Member resultMember = memberRepository.save(newMember);
-                    List<AlarmSetting> alarmSettingList = Arrays.stream(AlarmSettingType.values()).map(item -> AlarmSetting.builder().member(resultMember).isEnabled(true).alarmSettingType(item).build()).toList();
-                    alarmSettingRepository.saveAll(alarmSettingList);
-                    stateRepository.save(State.builder().states(MemberState.ACTIVE).member(resultMember).build());
-                    return resultMember;
-                });
+        if (existingMember.isPresent()) {
+            Member member = existingMember.get();
+            ensureBasicInformation(member, oAuth2UserInfo);
+            return member;
+        }
+
+        String name = requireSocialInformation(oAuth2UserInfo.getName());
+        String email = requireSocialInformation(oAuth2UserInfo.getEmail());
+        Member newMember = Member.builder()
+                .providerType(oAuth2UserInfo.getProviderType())
+                .providerId(providerId)
+                .role(MemberRole.USER)
+                .isDelete(false)
+                .build();
+
+        Member savedMember = memberRepository.save(newMember);
+        basicInformationRepository.save(BasicInformation.builder()
+                .member(savedMember)
+                .name(name)
+                .email(email)
+                .build());
+        List<AlarmSetting> alarmSettingList = Arrays.stream(AlarmSettingType.values())
+                .map(item -> AlarmSetting.builder()
+                        .member(savedMember)
+                        .isEnabled(true)
+                        .alarmSettingType(item)
+                        .build())
+                .toList();
+        alarmSettingRepository.saveAll(alarmSettingList);
+        stateRepository.save(State.builder().states(MemberState.ACTIVE).member(savedMember).build());
+        return savedMember;
+    }
+
+    private void ensureBasicInformation(Member member, OAuth2UserInfo oAuth2UserInfo) {
+        List<BasicInformation> basicInformationList = basicInformationRepository.findByMember(member);
+        if (basicInformationList.isEmpty()) {
+            basicInformationRepository.save(BasicInformation.builder()
+                    .member(member)
+                    .name(requireSocialInformation(oAuth2UserInfo.getName()))
+                    .email(requireSocialInformation(oAuth2UserInfo.getEmail()))
+                    .build());
+            return;
+        }
+
+        BasicInformation basicInformation = basicInformationList.getFirst();
+
+        String name = hasText(basicInformation.getName()) ? basicInformation.getName() : requireSocialInformation(oAuth2UserInfo.getName());
+        String email = hasText(basicInformation.getEmail()) ? basicInformation.getEmail() : requireSocialInformation(oAuth2UserInfo.getEmail());
+
+        basicInformation.fillSocialInformation(name, email);
+    }
+
+    private String requireSocialInformation(String value) {
+        if (!hasText(value)) {
+            throw new AuthException(AuthErrorCode.SSO_USER_INFO_OMISSION);
+        }
+        return value.trim();
+    }
+
+    private boolean hasText(String value) {
+        return value != null && !value.isBlank();
     }
 
     public AuthResponse findMemberForLogin(Member member, String accessToken) {

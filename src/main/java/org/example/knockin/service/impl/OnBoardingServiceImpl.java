@@ -52,20 +52,16 @@ public class OnBoardingServiceImpl {
 
     @Transactional
     public BasicInformation saveBasicInfo(SaveProfileBasicDto.Request request, Member member) {
-        List<BasicInformation> existing = basicInformationService.findByMember(member);
-        if (!existing.isEmpty()) {
-            BasicInformation basicInformation = existing.getFirst();
-            ModifyProfileBasicDto.Request modifyRequest = ModifyProfileBasicDto.Request.builder()
-                    .name(request.getName())
-                    .birth(request.getBirth())
-                    .gender(request.getGender())
-                    .email(request.getEmail())
-                    .build();
-            basicInformation.modifyBasicInformation(modifyRequest);
-            return basicInformation;
-        }
-        BasicInformation basicInformation = BasicInformation.builder().member(member).name(request.getName()).birth(request.getBirth()).gender(request.getGender()).email(request.getEmail()).build();
-        return basicInformationService.save(basicInformation);
+        BasicInformation basicInformation = findBasicInformation(member);
+        basicInformation.modifyOnboardingInformation(request.getBirth(), request.getGender());
+        return basicInformation;
+    }
+
+    private BasicInformation findBasicInformation(Member member) {
+        return basicInformationService.findByMember(member)
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new BusinessException(OnBoardErrorCode.ONBOARD_BASIC_SAVE_ERROR));
     }
 
     @Transactional
@@ -206,10 +202,8 @@ public class OnBoardingServiceImpl {
         Member member = memberService.findById(memberId).orElseThrow(() -> new BusinessException(AuthErrorCode.MEMBER_NOT_FOUND));
 
         SaveProfileBasicDto.Request basicRequest = SaveProfileBasicDto.Request.builder()
-                .name(request.getName())
                 .birth(request.getBirth())
                 .gender(request.getGender())
-                .email(request.getEmail())
                 .terms(request.getTerms())
                 .build();
 
@@ -242,15 +236,15 @@ public class OnBoardingServiceImpl {
 
     @Transactional
     public void modifyBasicInfo(ModifyProfileBasicDto.Request request, Member member) {
-        BasicInformation basicInformation = basicInformationService.findByMember(member).getFirst();
-        basicInformation.modifyBasicInformation(request);
+        BasicInformation basicInformation = findBasicInformation(member);
+        basicInformation.modifyOnboardingInformation(request.getBirth(), request.getGender());
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void modifyBasicInfo(ModifyProfileBasicDto.Request request, Member member, MultipartFile file) {
         try {
-            BasicInformation basicInformation = basicInformationService.findByMember(member).getFirst();
-            basicInformation.modifyBasicInformation(request);
+            BasicInformation basicInformation = findBasicInformation(member);
+            basicInformation.modifyOnboardingInformation(request.getBirth(), request.getGender());
 
             if(file != null && !file.isEmpty()) {
                 File fileEntity = fileService.save(file, FileType.USER_PROFILE_IMAGE);
@@ -477,10 +471,8 @@ public class OnBoardingServiceImpl {
         Member member = memberService.findById(memberId).orElseThrow(() -> new BusinessException(AuthErrorCode.MEMBER_NOT_FOUND));
 
         ModifyProfileBasicDto.Request basicRequest = ModifyProfileBasicDto.Request.builder()
-                .name(request.getName())
                 .birth(request.getBirth())
                 .gender(request.getGender())
-                .email(request.getEmail())
                 .terms(request.getTerms())
                 .build();
 
