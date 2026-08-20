@@ -26,7 +26,6 @@ public class SaveProfileBasicDto {
     @AllArgsConstructor
     public static class Request {
         @Schema(description = "이름")
-        @NotBlank
         @Size(max = 10)
         private String name;
         @Schema(description = "birth")

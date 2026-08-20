@@ -552,44 +552,44 @@ public class SeedDataConfig implements CommandLineRunner {
         // 9. 파일 메타데이터 (File) & 프로필 사진 (BasicInformationFile)
         File profilePic = File.builder()
                 .type(FileType.USER_PROFILE_IMAGE)
-                .originalFileName("https://velog.velcdn.com/images/sdb016/post/47181c7c-1156-4182-a638-e0ad0b03a3d3/test.png")
-                .savedFileName("https://velog.velcdn.com/images/sdb016/post/47181c7c-1156-4182-a638-e0ad0b03a3d3/test.png")
-                .fileExt("png")
+                .originalFileName("https://i.pinimg.com/736x/81/58/be/8158be42360c6264c1688d300a0fb8b0.jpg")
+                .savedFileName("https://i.pinimg.com/736x/81/58/be/8158be42360c6264c1688d300a0fb8b0.jpg")
+                .fileExt("jpg")
                 .isDeleted(false)
                 .build();
         File boardPic = File.builder()
                 .type(FileType.ROOMMATE_BOARD_IMAGE)
-                .originalFileName("https://velog.velcdn.com/images/sdb016/post/47181c7c-1156-4182-a638-e0ad0b03a3d3/test.png")
-                .savedFileName("https://velog.velcdn.com/images/sdb016/post/47181c7c-1156-4182-a638-e0ad0b03a3d3/test.png")
-                .fileExt("png")
+                .originalFileName("https://i.pinimg.com/736x/81/58/be/8158be42360c6264c1688d300a0fb8b0.jpg")
+                .savedFileName("https://i.pinimg.com/736x/81/58/be/8158be42360c6264c1688d300a0fb8b0.jpg")
+                .fileExt("jpg")
                 .isDeleted(false)
                 .build();
         File roomTypePic = File.builder()
                 .type(FileType.ETC)
-                .originalFileName("https://velog.velcdn.com/images/sdb016/post/47181c7c-1156-4182-a638-e0ad0b03a3d3/test.png")
-                .savedFileName("https://velog.velcdn.com/images/sdb016/post/47181c7c-1156-4182-a638-e0ad0b03a3d3/test.png")
-                .fileExt("png")
+                .originalFileName("https://i.pinimg.com/736x/81/58/be/8158be42360c6264c1688d300a0fb8b0.jpg")
+                .savedFileName("https://i.pinimg.com/736x/81/58/be/8158be42360c6264c1688d300a0fb8b0.jpg")
+                .fileExt("jpg")
                 .isDeleted(false)
                 .build();
         File extraOptionPic = File.builder()
                 .type(FileType.ETC)
                 .originalFileName("https://velog.velcdn.com/images/sdb016/post/47181c7c-1156-4182-a638-e0ad0b03a3d3/test")
-                .savedFileName("https://velog.velcdn.com/images/sdb016/post/47181c7c-1156-4182-a638-e0ad0b03a3d3/test.png")
-                .fileExt("png")
+                .savedFileName("https://i.pinimg.com/736x/81/58/be/8158be42360c6264c1688d300a0fb8b0.jpg")
+                .fileExt("jpg")
                 .isDeleted(false)
                 .build();
         File lifePatternPic = File.builder()
                 .type(FileType.ETC)
-                .originalFileName("https://velog.velcdn.com/images/sdb016/post/47181c7c-1156-4182-a638-e0ad0b03a3d3/test.png")
-                .savedFileName("https://velog.velcdn.com/images/sdb016/post/47181c7c-1156-4182-a638-e0ad0b03a3d3/test.png")
-                .fileExt("png")
+                .originalFileName("https://i.pinimg.com/736x/81/58/be/8158be42360c6264c1688d300a0fb8b0.jpg")
+                .savedFileName("https://i.pinimg.com/736x/81/58/be/8158be42360c6264c1688d300a0fb8b0.jpg")
+                .fileExt("jpg")
                 .isDeleted(false)
                 .build();
         File chatRoomPic = File.builder()
                 .type(FileType.CHAT_ROOM_IMAGE)
-                .originalFileName("https://velog.velcdn.com/images/sdb016/post/47181c7c-1156-4182-a638-e0ad0b03a3d3/test.png")
-                .savedFileName("https://velog.velcdn.com/images/sdb016/post/47181c7c-1156-4182-a638-e0ad0b03a3d3/test.png")
-                .fileExt("png")
+                .originalFileName("https://i.pinimg.com/736x/81/58/be/8158be42360c6264c1688d300a0fb8b0.jpg")
+                .savedFileName("https://i.pinimg.com/736x/81/58/be/8158be42360c6264c1688d300a0fb8b0.jpg")
+                .fileExt("jpg")
                 .isDeleted(false)
                 .build();
         fileRepository.saveAll(List.of(profilePic, boardPic, roomTypePic, extraOptionPic, lifePatternPic, chatRoomPic));
@@ -668,7 +668,7 @@ public class SeedDataConfig implements CommandLineRunner {
         // 12-1. 추가 테스트용
         RoommateBoard board2 = RoommateBoard.builder()
                 .member(user1)
-                .title("강남역 인근 깔끔한 원룸 룸메 구합니다! (테스트용, member.id 변경)")
+                .title("강남역 인근 깔끔한 원룸 룸메 구합니다!")
                 .contents("채광 좋고 조용한 원룸입니다. 함께 깨끗하게 쓰실 분 환영해요.")
                 .deposit(500)
                 .monthlyRent(50)
@@ -692,7 +692,7 @@ public class SeedDataConfig implements CommandLineRunner {
                 .build();
 
         roommateBoardOptionRepository.saveAll(List.of(boardOption3, boardOption4));
-        roommateBoardDeclarationRepository.save(RoommateBoardDeclaration.builder().member(user2).roommateBoard(board2).reason("허위 매물 등록 의심 테스트").declarationType(DeclarationType.PENDING).build());
+        roommateBoardDeclarationRepository.save(RoommateBoardDeclaration.builder().member(user2).roommateBoard(board2).reason("허위 매물 등록 의심").declarationType(DeclarationType.PENDING).build());
 
         // 13. 1:1 문의 및 답변 (Inquiry & InquiryComment)
         Inquiry inquiry1 = Inquiry.builder()

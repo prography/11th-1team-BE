@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -50,13 +51,22 @@ public class OnBoardingServiceImpl {
     private final RoommateBoardService roommateBoardService;
     private final FileService fileService;
 
+    private String resolveName(String name) {
+        if (StringUtils.hasText(name)) {
+            return name;
+        }
+        return "유저_" + UUID.randomUUID().toString().substring(0, 6);
+    }
+
     @Transactional
     public BasicInformation saveBasicInfo(SaveProfileBasicDto.Request request, Member member) {
+        String resolvedName = resolveName(request.getName());
+
         List<BasicInformation> existing = basicInformationService.findByMember(member);
         if (!existing.isEmpty()) {
             BasicInformation basicInformation = existing.getFirst();
             ModifyProfileBasicDto.Request modifyRequest = ModifyProfileBasicDto.Request.builder()
-                    .name(request.getName())
+                    .name(resolvedName)
                     .birth(request.getBirth())
                     .gender(request.getGender())
                     .email(request.getEmail())
@@ -64,7 +74,7 @@ public class OnBoardingServiceImpl {
             basicInformation.modifyBasicInformation(modifyRequest);
             return basicInformation;
         }
-        BasicInformation basicInformation = BasicInformation.builder().member(member).name(request.getName()).birth(request.getBirth()).gender(request.getGender()).email(request.getEmail()).build();
+        BasicInformation basicInformation = BasicInformation.builder().member(member).name(resolvedName).birth(request.getBirth()).gender(request.getGender()).email(request.getEmail()).build();
         return basicInformationService.save(basicInformation);
     }
 
