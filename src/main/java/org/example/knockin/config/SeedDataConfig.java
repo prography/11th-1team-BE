@@ -432,7 +432,13 @@ public class SeedDataConfig implements CommandLineRunner {
                 .role(MemberRole.USER)
                 .isDelete(false)
                 .build();
-        memberRepository.saveAll(List.of(adminMember, user1, user2));
+        Member user3 = Member.builder()
+                .providerType(LoginProviderType.APPLE)
+                .providerId("user2_provider_886")
+                .role(MemberRole.USER)
+                .isDelete(false)
+                .build();
+        memberRepository.saveAll(List.of(adminMember, user1, user2, user3));
 
         stateRepository.saveAll(List.of(
                 State.builder().member(adminMember).states(MemberState.ACTIVE).build(),
