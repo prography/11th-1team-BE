@@ -104,7 +104,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 JsonNode nameNode = userNode.get("name");
                 String lastName = nameNode.has("lastName") ? nameNode.get("lastName").asText() : "";
                 String firstName = nameNode.has("firstName") ? nameNode.get("firstName").asText() : "";
-                String fullName = (lastName + " " + firstName).trim();
+                String fullName = (lastName + firstName).trim();
                 return fullName.isBlank() ? null : fullName;
             }
         } catch (Exception e) {
