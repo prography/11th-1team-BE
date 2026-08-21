@@ -6,9 +6,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.ServletException;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.knockin.dto.AppleSdkRequest;
 import org.example.knockin.dto.OAuth2SdkRequest;
 import org.example.knockin.auth.handler.OAuth2FailureHandler;
 import org.example.knockin.auth.handler.OAuth2SuccessHandler;
@@ -74,7 +76,14 @@ public class CustomOAuth2Filter extends OncePerRequestFilter {
                         Instant.now().plusSeconds(3600)
                 );
 
-                OAuth2UserRequest userRequest = new OAuth2UserRequest(clientRegistration, oauth2Token);
+                Map<String, Object> additionalParameters = new HashMap<>();
+                if (sdkRequest instanceof AppleSdkRequest appleReq) {
+                    if (appleReq.getName() != null) {
+                        additionalParameters.put("name", appleReq.getName());
+                    }
+                }
+
+                OAuth2UserRequest userRequest = new OAuth2UserRequest(clientRegistration, oauth2Token, additionalParameters);
                 OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
 
                 OAuth2AuthenticationToken authentication = new OAuth2AuthenticationToken(

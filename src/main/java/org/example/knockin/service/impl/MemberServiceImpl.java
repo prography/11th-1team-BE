@@ -63,6 +63,7 @@ public class MemberServiceImpl {
                             .providerId(String.valueOf(oAuth2UserInfo.getId()))
                             .email(oAuth2UserInfo.getEmail())
                             .role(MemberRole.USER)
+                            .name(oAuth2UserInfo.getName())
                             .isDelete(false)
                             .build();
 

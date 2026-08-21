@@ -60,7 +60,7 @@ public class OnBoardingServiceImpl {
 
     @Transactional
     public BasicInformation saveBasicInfo(SaveProfileBasicDto.Request request, Member member) {
-        String resolvedName = resolveName(request.getName());
+        String resolvedName = StringUtils.hasText(member.getName()) ? member.getName() : resolveName(request.getName());
 
         List<BasicInformation> existing = basicInformationService.findByMember(member);
         if (!existing.isEmpty()) {

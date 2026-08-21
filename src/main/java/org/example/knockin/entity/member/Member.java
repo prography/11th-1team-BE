@@ -81,6 +81,9 @@ public class Member extends CreatedAtEntity {
     @Column(name = "email", length = 512, comment = "SSO 이메일")
     private String email;
 
+    @Column(name = "name", comment = "SSO 이름")
+    private String name;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "platform", length = 50, comment = "디바이스 플랫폼")
     private DevicePlatform platform;

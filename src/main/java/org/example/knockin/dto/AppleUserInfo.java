@@ -13,6 +13,9 @@ public class AppleUserInfo implements OAuth2UserInfo {
     @JsonProperty("is_private_email")
     private Boolean isPrivateEmail;
 
+    @JsonProperty("name")
+    private String name;
+
     @Override
     public String getId() {
         return sub;
@@ -26,5 +29,10 @@ public class AppleUserInfo implements OAuth2UserInfo {
     @Override
     public String getEmail() {
         return email;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }
