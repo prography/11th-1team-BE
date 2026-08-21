@@ -61,6 +61,7 @@ public class OnBoardingServiceImpl {
     @Transactional
     public BasicInformation saveBasicInfo(SaveProfileBasicDto.Request request, Member member) {
         String resolvedName = StringUtils.hasText(member.getName()) ? member.getName() : resolveName(request.getName());
+        String resolvedEmail = StringUtils.hasText(member.getEmail()) ? member.getEmail() : request.getEmail();
 
         List<BasicInformation> existing = basicInformationService.findByMember(member);
         if (!existing.isEmpty()) {
@@ -69,12 +70,12 @@ public class OnBoardingServiceImpl {
                     .name(resolvedName)
                     .birth(request.getBirth())
                     .gender(request.getGender())
-                    .email(request.getEmail())
+                    .email(resolvedEmail)
                     .build();
             basicInformation.modifyBasicInformation(modifyRequest);
             return basicInformation;
         }
-        BasicInformation basicInformation = BasicInformation.builder().member(member).name(resolvedName).birth(request.getBirth()).gender(request.getGender()).email(request.getEmail()).build();
+        BasicInformation basicInformation = BasicInformation.builder().member(member).name(resolvedName).birth(request.getBirth()).gender(request.getGender()).email(resolvedEmail).build();
         return basicInformationService.save(basicInformation);
     }
 
