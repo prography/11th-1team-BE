@@ -21,6 +21,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Map;
 
 @Slf4j
@@ -119,7 +121,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             if (parts.length < 2) {
                 throw new AuthException(AuthErrorCode.APPLE_VALIDATE_JWT_ERROR);
             }
-            String payloadJson = new String(java.util.Base64.getUrlDecoder().decode(parts[1]), java.nio.charset.StandardCharsets.UTF_8);
+            String payloadJson = new String(Base64.getUrlDecoder().decode(parts[1]), StandardCharsets.UTF_8);
             Map<String, Object> claims = objectMapper.readValue(payloadJson, Map.class);
             if (claims.containsKey("sub")) {
                 Object subObj = claims.get("sub");
