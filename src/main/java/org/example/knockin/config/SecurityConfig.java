@@ -96,8 +96,7 @@ public class SecurityConfig {
                                 "/meta/faqAll",
                                 "/meta/faq/*",
                                 "/meta/app-version/**",
-                                "/meta/auth-email",
-                                "/test/auth/token"
+                                "/meta/auth-email"
                 ).permitAll()
                 .requestMatchers("/bo/**").hasAuthority(MemberRole.ADMIN.name()).anyRequest().authenticated())
                 .build();
