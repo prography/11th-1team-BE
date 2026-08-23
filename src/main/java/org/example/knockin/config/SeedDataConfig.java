@@ -240,6 +240,7 @@ public class SeedDataConfig implements CommandLineRunner {
 
     @Override
     @Transactional
+    @Profile("!prod")
     public void run(String... args) throws Exception {
         if (agreementRepository.count() > 0) {
             return;
