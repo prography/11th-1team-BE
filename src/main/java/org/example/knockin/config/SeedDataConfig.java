@@ -158,7 +158,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-@Profile("prod")
+@Profile("!prod")
 public class SeedDataConfig implements CommandLineRunner {
     private final AgreementRepository agreementRepository;
     private final AgreementLogRepository agreementLogRepository;
