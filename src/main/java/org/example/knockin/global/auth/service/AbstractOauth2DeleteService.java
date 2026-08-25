@@ -1,6 +1,6 @@
 package org.example.knockin.global.auth.service;
 
-import org.example.knockin.authentication.entity.LoginProviderType;
+import org.example.knockin.verification.entity.LoginProviderType;
 import org.springframework.web.client.RestTemplate;
 
 public abstract class AbstractOauth2DeleteService implements Oauth2DeleteService{

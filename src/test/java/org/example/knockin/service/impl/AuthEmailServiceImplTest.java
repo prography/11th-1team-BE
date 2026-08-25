@@ -4,7 +4,7 @@ import org.example.knockin.meta.dto.AuthEmailDeleteDto;
 import org.example.knockin.meta.dto.AuthEmailListDto;
 import org.example.knockin.meta.dto.AuthEmailModifyDto;
 import org.example.knockin.meta.dto.AuthEmailSaveDto;
-import org.example.knockin.authentication.entity.AuthenticationType;
+import org.example.knockin.verification.entity.AuthenticationType;
 import org.example.knockin.meta.entity.AuthEmail;
 import org.example.knockin.global.exception.AuthEmailErrorCode;
 import org.example.knockin.global.exception.BusinessException;

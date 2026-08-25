@@ -7,7 +7,7 @@ import org.example.knockin.member.dto.BoMemberDetailDto;
 import org.example.knockin.member.dto.BoMemberListDto;
 import org.example.knockin.life.dto.MyPreferencesAllDto;
 import org.example.knockin.life.dto.MyProfileAllDto;
-import org.example.knockin.authentication.entity.LoginProviderType;
+import org.example.knockin.verification.entity.LoginProviderType;
 import org.example.knockin.member.entity.Member;
 import org.example.knockin.meta.entity.Region;
 import org.example.knockin.room.entity.RoomProfile;

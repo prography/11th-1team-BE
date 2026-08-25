@@ -4,7 +4,7 @@ import org.example.knockin.meta.dto.AlarmSettingDto;
 import org.example.knockin.meta.dto.MyNotificationSettingsDto;
 import org.example.knockin.meta.entity.AlarmSetting;
 import org.example.knockin.meta.entity.AlarmSettingType;
-import org.example.knockin.meta.service.NotificationSettingServiceImpl;
+import org.example.knockin.meta.service.impl.NotificationSettingServiceImpl;
 import org.example.knockin.member.entity.Member;
 import org.example.knockin.global.exception.AuthErrorCode;
 import org.example.knockin.global.exception.BusinessException;

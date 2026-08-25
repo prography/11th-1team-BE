@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
-import org.example.knockin.authentication.entity.LoginProviderType;
+import org.example.knockin.verification.entity.LoginProviderType;
 import org.example.knockin.member.entity.Member;
 import org.example.knockin.member.entity.MemberRole;
 import org.example.knockin.global.auth.dto.PrincipalDetails;

@@ -3,8 +3,8 @@ package org.example.knockin.chat.service.impl;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.example.knockin.matching.entity.ChattingScore;
-import org.example.knockin.matching.repository.ChattingScoreRepository;
+import org.example.knockin.chat.entity.ChattingScore;
+import org.example.knockin.chat.repository.ChattingScoreRepository;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,6 +1,6 @@
 package org.example.knockin.service.impl;
 
-import org.example.knockin.meta.service.NotificationServiceImpl;
+import org.example.knockin.meta.service.impl.NotificationServiceImpl;
 import org.example.knockin.meta.dto.BoNoticeListDto;
 import org.example.knockin.meta.dto.NoticeDetailDto;
 import org.example.knockin.meta.entity.Notification;

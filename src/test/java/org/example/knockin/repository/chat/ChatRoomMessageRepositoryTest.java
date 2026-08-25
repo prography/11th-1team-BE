@@ -7,7 +7,7 @@ import java.util.List;
 import org.example.knockin.chat.repository.ChatRoomMessageRepository;
 import org.example.knockin.global.config.QueryDslConfig;
 import org.example.knockin.chat.dto.MessageType;
-import org.example.knockin.authentication.entity.LoginProviderType;
+import org.example.knockin.verification.entity.LoginProviderType;
 import org.example.knockin.chat.entity.ChatRoomMember;
 import org.example.knockin.chat.entity.ChatRoomMessage;
 import org.example.knockin.chat.entity.ChattingRequired;

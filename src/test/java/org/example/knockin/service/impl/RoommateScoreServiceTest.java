@@ -10,7 +10,7 @@ import java.util.Map;
 import org.example.knockin.matching.dto.Compatibility;
 import org.example.knockin.chat.entity.ChattingRequired;
 import org.example.knockin.chat.entity.ChattingRequiredStatus;
-import org.example.knockin.matching.entity.ChattingScore;
+import org.example.knockin.chat.entity.ChattingScore;
 import org.example.knockin.life.entity.LifePattern;
 import org.example.knockin.life.entity.LifePatternInformation;
 import org.example.knockin.life.entity.LifePatternType;

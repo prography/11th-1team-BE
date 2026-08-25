@@ -1,7 +1,7 @@
 package org.example.knockin.service.impl;
 
-import org.example.knockin.meta.service.AlarmServiceImpl;
-import org.example.knockin.meta.service.PushNotificationServiceImpl;
+import org.example.knockin.meta.service.impl.AlarmServiceImpl;
+import org.example.knockin.meta.service.impl.PushNotificationServiceImpl;
 import org.example.knockin.inquiry.dto.BoInquiryDetailDto;
 import org.example.knockin.inquiry.dto.BoInquiryListDto;
 import org.example.knockin.inquiry.dto.InquiryCategoryListDto;
@@ -18,7 +18,7 @@ import org.example.knockin.global.exception.InquiryErrorCode;
 import org.example.knockin.inquiry.repository.InquiryCategoryRepository;
 import org.example.knockin.inquiry.repository.InquiryCommentRepository;
 import org.example.knockin.inquiry.repository.InquiryRepository;
-import org.example.knockin.inquiry.service.InquirieServiceImpl;
+import org.example.knockin.inquiry.service.impl.InquirieServiceImpl;
 import org.example.knockin.member.service.impl.MemberServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

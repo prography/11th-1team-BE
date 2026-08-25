@@ -3,7 +3,7 @@ package org.example.knockin.meta.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.knockin.meta.dto.AuthEmailModifyDto;
-import org.example.knockin.authentication.entity.AuthenticationType;
+import org.example.knockin.verification.entity.AuthenticationType;
 import org.example.knockin.global.entity.BaseEntity;
 import org.hibernate.annotations.ColumnDefault;
 

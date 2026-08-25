@@ -8,7 +8,7 @@ import org.example.knockin.meta.entity.AlarmSettingType;
 import org.example.knockin.member.entity.Member;
 import org.example.knockin.meta.repository.AlarmSettingRepository;
 import org.example.knockin.meta.service.impl.FcmServiceImpl;
-import org.example.knockin.meta.service.PushNotificationServiceImpl;
+import org.example.knockin.meta.service.impl.PushNotificationServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

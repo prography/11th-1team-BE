@@ -8,7 +8,7 @@ import org.example.knockin.meta.dto.AlarmReadAllDto;
 import org.example.knockin.meta.dto.AlarmReadDto;
 import org.example.knockin.global.api.CommonResponse;
 import org.example.knockin.global.auth.dto.PrincipalDetails;
-import org.example.knockin.meta.service.AlarmServiceImpl;
+import org.example.knockin.meta.service.impl.AlarmServiceImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;

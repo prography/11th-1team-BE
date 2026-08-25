@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import java.util.List;
 import lombok.NoArgsConstructor;
-import org.example.knockin.authentication.entity.AuthenticationType;
+import org.example.knockin.verification.entity.AuthenticationType;
 import org.example.knockin.board.entity.RoommateBoardBadgeType;
 import org.example.knockin.member.entity.Gender;
 

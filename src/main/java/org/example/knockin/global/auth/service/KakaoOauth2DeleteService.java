@@ -1,7 +1,7 @@
 package org.example.knockin.global.auth.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.knockin.authentication.entity.LoginProviderType;
+import org.example.knockin.verification.entity.LoginProviderType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;

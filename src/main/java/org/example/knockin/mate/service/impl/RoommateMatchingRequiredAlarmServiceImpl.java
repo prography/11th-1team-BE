@@ -2,7 +2,7 @@ package org.example.knockin.mate.service.impl;
 
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
-import org.example.knockin.meta.service.AlarmServiceImpl;
+import org.example.knockin.meta.service.impl.AlarmServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.example.knockin.meta.entity.AlarmType;
 import org.example.knockin.member.entity.Member;

@@ -21,9 +21,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.StreamSupport;
 import org.example.knockin.board.dto.BoBoardDetailDto;
 import org.example.knockin.board.dto.BoBoardListDto;
-import org.example.knockin.meta.service.AlarmServiceImpl;
-import org.example.knockin.meta.service.PushNotificationServiceImpl;
-import org.example.knockin.authentication.service.impl.AuthenticationServiceImpl;
+import org.example.knockin.meta.service.impl.AlarmServiceImpl;
+import org.example.knockin.meta.service.impl.PushNotificationServiceImpl;
+import org.example.knockin.verification.service.impl.AuthenticationServiceImpl;
 import org.example.knockin.board.dto.BoardDetailDto;
 import org.example.knockin.board.dto.BoardDto;
 import org.example.knockin.board.dto.BoardEditDto;
@@ -40,7 +40,7 @@ import org.example.knockin.board.dto.BoardModifyDto.Request.ExistingFileDto;
 import org.example.knockin.board.dto.BoardModifyDto.Request.NewFileDto;
 import org.example.knockin.matching.dto.Compatibility;
 import org.example.knockin.declaration.dto.ReportDto;
-import org.example.knockin.authentication.entity.AuthenticationType;
+import org.example.knockin.verification.entity.AuthenticationType;
 import org.example.knockin.board.entity.RoommateBoard;
 import org.example.knockin.board.entity.RoommateBoardBadgeType;
 import org.example.knockin.declaration.entity.RoommateBoardDeclaration;
@@ -67,8 +67,8 @@ import org.example.knockin.global.exception.MemberErrorCode;
 import org.example.knockin.global.exception.MetaErrorCode;
 import org.example.knockin.global.exception.RoommateBoardErrorCode;
 import org.example.knockin.global.exception.RoomTypeErrorCode;
-import org.example.knockin.authentication.repository.AuthenticationRepository;
-import org.example.knockin.authentication.repository.row.MemberAuthenticationRow;
+import org.example.knockin.verification.repository.AuthenticationRepository;
+import org.example.knockin.verification.repository.row.MemberAuthenticationRow;
 import org.example.knockin.declaration.repository.RoommateBoardDeclarationRepository;
 import org.example.knockin.board.repository.RoommateBoardFileRepository;
 import org.example.knockin.board.repository.RoommateBoardInterestRepository;
@@ -170,9 +170,6 @@ class RoommateBoardServiceImplTest {
 
     @Mock
     private RoommateBoardInterestServiceImpl roommateBoardInterestService;
-
-    @Mock
-    private RoommateBoardDeclarationServiceImpl roommateBoardDeclarationService;
 
     @Mock
     private RoommateBoardPolicy roommateBoardPolicy;

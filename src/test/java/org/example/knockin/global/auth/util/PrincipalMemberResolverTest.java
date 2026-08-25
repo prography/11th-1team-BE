@@ -3,7 +3,7 @@ package org.example.knockin.global.auth.util;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import org.example.knockin.authentication.entity.LoginProviderType;
+import org.example.knockin.verification.entity.LoginProviderType;
 import org.example.knockin.member.entity.Member;
 import org.example.knockin.member.entity.MemberRole;
 import org.example.knockin.global.auth.dto.PrincipalDetails;

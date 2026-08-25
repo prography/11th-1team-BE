@@ -1,7 +1,7 @@
 package org.example.knockin.mate.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.example.knockin.meta.service.PushNotificationServiceImpl;
+import org.example.knockin.meta.service.impl.PushNotificationServiceImpl;
 import org.example.knockin.chat.dto.ChatSocketResponse;
 import org.example.knockin.chat.service.impl.ChatRoomMemberServiceImpl;
 import org.example.knockin.chat.dto.EventType;

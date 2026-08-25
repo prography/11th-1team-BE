@@ -9,9 +9,9 @@ import static org.mockito.Mockito.verify;
 
 import java.util.List;
 import java.util.Optional;
-import org.example.knockin.mate.entity.HouseRuleDetailDto;
-import org.example.knockin.mate.entity.HouseRuleDto;
-import org.example.knockin.mate.entity.HouseRuleListDto;
+import org.example.knockin.mate.dto.HouseRuleDetailDto;
+import org.example.knockin.mate.dto.HouseRuleDto;
+import org.example.knockin.mate.dto.HouseRuleListDto;
 import org.example.knockin.member.entity.Member;
 import org.example.knockin.mate.entity.MyRoommate;
 import org.example.knockin.mate.entity.RoommateHouseRule;

@@ -3,7 +3,7 @@ package org.example.knockin.board.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
-import org.example.knockin.authentication.entity.AuthenticationType;
+import org.example.knockin.verification.entity.AuthenticationType;
 import org.example.knockin.board.entity.RoommateBoardBadgeType;
 import org.example.knockin.member.entity.Gender;
 

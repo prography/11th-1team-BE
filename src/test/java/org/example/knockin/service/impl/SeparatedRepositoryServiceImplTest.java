@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import org.example.knockin.meta.service.AlarmServiceImpl;
+import org.example.knockin.meta.service.impl.AlarmServiceImpl;
 import org.example.knockin.chat.service.impl.ChatRoomMemberServiceImpl;
 import org.example.knockin.chat.service.impl.ChattingRequiredAlarmServiceImpl;
 import org.example.knockin.chat.service.impl.ChattingRequiredServiceImpl;

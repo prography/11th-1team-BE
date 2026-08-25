@@ -9,7 +9,7 @@ import org.example.knockin.global.auth.repository.HttpCookieOAuth2AuthorizationR
 import org.example.knockin.global.auth.util.TokenProvider;
 import org.example.knockin.meta.dto.AuthResponse;
 import org.example.knockin.global.auth.dto.PrincipalDetails;
-import org.example.knockin.authentication.entity.LoginProviderType;
+import org.example.knockin.verification.entity.LoginProviderType;
 import org.example.knockin.member.entity.Member;
 import org.example.knockin.member.entity.MemberRole;
 import org.example.knockin.global.exception.AuthErrorCode;

@@ -1,6 +1,6 @@
 package org.example.knockin.global.auth.service;
 
-import org.example.knockin.authentication.entity.LoginProviderType;
+import org.example.knockin.verification.entity.LoginProviderType;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

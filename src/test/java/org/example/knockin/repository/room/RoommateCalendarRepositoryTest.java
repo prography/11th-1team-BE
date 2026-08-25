@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.example.knockin.global.config.QueryDslConfig;
-import org.example.knockin.authentication.entity.LoginProviderType;
+import org.example.knockin.verification.entity.LoginProviderType;
 import org.example.knockin.chat.entity.ChattingRequired;
 import org.example.knockin.chat.entity.ChattingRequiredStatus;
 import org.example.knockin.chat.entity.ChattingRoom;

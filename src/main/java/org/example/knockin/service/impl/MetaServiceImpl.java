@@ -3,7 +3,7 @@ package org.example.knockin.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.example.knockin.agreement.dto.TermsDetailDto;
 import org.example.knockin.agreement.dto.TermsListDto;
-import org.example.knockin.agreement.service.AgreementServiceImpl;
+import org.example.knockin.agreement.service.impl.AgreementServiceImpl;
 import org.example.knockin.agreement.entity.Agreement;
 import org.example.knockin.agreement.entity.AgreementLog;
 import org.example.knockin.life.service.impl.LifeStyleServiceImpl;

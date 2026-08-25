@@ -1,6 +1,6 @@
 package org.example.knockin.service.impl;
  
-import org.example.knockin.agreement.service.AgreementServiceImpl;
+import org.example.knockin.agreement.service.impl.AgreementServiceImpl;
 import org.example.knockin.agreement.dto.BoTermsListDto;
 import org.example.knockin.agreement.dto.BoTypeTermsListDto;
 import java.time.LocalDateTime;

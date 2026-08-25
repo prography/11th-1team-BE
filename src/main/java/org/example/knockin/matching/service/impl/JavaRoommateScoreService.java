@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.example.knockin.matching.dto.Compatibility;
 import org.example.knockin.chat.entity.ChattingRequired;
-import org.example.knockin.matching.entity.ChattingScore;
+import org.example.knockin.chat.entity.ChattingScore;
 import org.example.knockin.life.entity.LifePatternInformation;
 import org.example.knockin.life.entity.LifePatternType;
 import org.example.knockin.life.entity.MemberLifePatternLog;

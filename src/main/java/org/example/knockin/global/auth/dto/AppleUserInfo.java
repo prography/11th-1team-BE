@@ -1,7 +1,7 @@
 package org.example.knockin.global.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.example.knockin.authentication.entity.LoginProviderType;
+import org.example.knockin.verification.entity.LoginProviderType;
 
 public class AppleUserInfo implements OAuth2UserInfo {
     @JsonProperty("sub")

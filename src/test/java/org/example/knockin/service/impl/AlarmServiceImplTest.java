@@ -5,7 +5,7 @@ import org.example.knockin.meta.dto.AlarmReadAllDto;
 import org.example.knockin.meta.dto.AlarmReadDto;
 import org.example.knockin.meta.entity.Alarm;
 import org.example.knockin.meta.entity.AlarmType;
-import org.example.knockin.meta.service.AlarmServiceImpl;
+import org.example.knockin.meta.service.impl.AlarmServiceImpl;
 import org.example.knockin.member.entity.Member;
 import org.example.knockin.global.exception.AuthErrorCode;
 import org.example.knockin.global.exception.AlarmErrorCode;

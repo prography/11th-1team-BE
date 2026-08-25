@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.example.knockin.global.config.QueryDslConfig;
-import org.example.knockin.authentication.entity.LoginProviderType;
+import org.example.knockin.verification.entity.LoginProviderType;
 import org.example.knockin.member.entity.BasicInformation;
 import org.example.knockin.member.entity.Block;
 import org.example.knockin.member.entity.Gender;

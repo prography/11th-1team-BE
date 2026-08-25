@@ -2,9 +2,9 @@ package org.example.knockin.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.knockin.agreement.service.MemberAgreementServiceImpl;
-import org.example.knockin.authentication.dto.MyVerificationListDto;
-import org.example.knockin.authentication.service.impl.AuthenticationServiceImpl;
+import org.example.knockin.agreement.service.impl.MemberAgreementServiceImpl;
+import org.example.knockin.verification.dto.MyVerificationListDto;
+import org.example.knockin.verification.service.impl.AuthenticationServiceImpl;
 import org.example.knockin.board.dto.MyBoardListDto;
 import org.example.knockin.agreement.entity.AgreementLog;
 import org.example.knockin.agreement.entity.MemberAgreement;

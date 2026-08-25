@@ -2,7 +2,7 @@ package org.example.knockin.service.impl;
  
 import org.example.knockin.agreement.dto.TermsDetailDto;
 import org.example.knockin.agreement.dto.TermsListDto;
-import org.example.knockin.agreement.service.AgreementServiceImpl;
+import org.example.knockin.agreement.service.impl.AgreementServiceImpl;
 import org.example.knockin.agreement.entity.Agreement;
 import org.example.knockin.meta.dto.MetaRegionsDto;
 import org.example.knockin.meta.dto.PopularSearchDto;

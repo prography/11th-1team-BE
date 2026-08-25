@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.example.knockin.meta.service.AlarmServiceImpl;
+import org.example.knockin.meta.service.impl.AlarmServiceImpl;
 import org.example.knockin.board.service.impl.RoommateBoardServiceImpl;
 import org.example.knockin.chat.dto.ChatRequestDetailDto;
 import org.example.knockin.chat.dto.ChatRequestListDto;
