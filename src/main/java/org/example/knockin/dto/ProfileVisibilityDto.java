@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.knockin.entity.member.MemberPrivacyType;
+import org.example.knockin.member.entity.MemberPrivacyType;
 
 import java.time.LocalDateTime;
 

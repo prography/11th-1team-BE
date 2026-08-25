@@ -3,8 +3,8 @@ package org.example.knockin.service;
 import java.util.List;
 import java.util.Map;
 import org.example.knockin.dto.Compatibility;
-import org.example.knockin.entity.chat.ChattingRequired;
-import org.example.knockin.entity.chat.ChattingScore;
+import org.example.knockin.chat.entity.ChattingRequired;
+import org.example.knockin.chat.entity.ChattingScore;
 
 public interface RoommateScoreService {
     Map<Long, Compatibility> calculateScores(Long requesterId, List<Long> targetMemberIds);

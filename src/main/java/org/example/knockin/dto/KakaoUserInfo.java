@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.example.knockin.entity.auth.LoginProviderType;
+import org.example.knockin.authentication.entity.LoginProviderType;
 
 public class KakaoUserInfo implements OAuth2UserInfo {
     private Long id;

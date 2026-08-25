@@ -1,16 +1,17 @@
 package org.example.knockin.service.impl;
  
-import org.example.knockin.dto.BoTermsListDto;
-import org.example.knockin.dto.BoTypeTermsListDto;
+import org.example.knockin.agreement.service.AgreementServiceImpl;
+import org.example.knockin.agreement.dto.BoTermsListDto;
+import org.example.knockin.agreement.dto.BoTypeTermsListDto;
 import java.time.LocalDateTime;
-import org.example.knockin.entity.agreement.Agreement;
-import org.example.knockin.entity.agreement.AgreementLog;
-import org.example.knockin.entity.agreement.AgreementType;
-import org.example.knockin.exception.AgreementErrorCode;
-import org.example.knockin.exception.BusinessException;
-import org.example.knockin.repository.agreement.AgreementLogRepository;
-import org.example.knockin.repository.agreement.AgreementRepository;
-import org.example.knockin.repository.agreement.AgreementTypeRepository;
+import org.example.knockin.agreement.entity.Agreement;
+import org.example.knockin.agreement.entity.AgreementLog;
+import org.example.knockin.agreement.entity.AgreementType;
+import org.example.knockin.global.exception.AgreementErrorCode;
+import org.example.knockin.global.exception.BusinessException;
+import org.example.knockin.agreement.repository.AgreementLogRepository;
+import org.example.knockin.agreement.repository.AgreementRepository;
+import org.example.knockin.agreement.repository.AgreementTypeRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,7 +1,8 @@
 package org.example.knockin.service.impl;
  
-import org.example.knockin.exception.BusinessException;
-import org.example.knockin.exception.FileErrorCode;
+import org.example.knockin.global.exception.BusinessException;
+import org.example.knockin.global.exception.FileErrorCode;
+import org.example.knockin.meta.service.impl.LocalFileUploadServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

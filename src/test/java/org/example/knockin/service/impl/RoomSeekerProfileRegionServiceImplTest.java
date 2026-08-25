@@ -1,8 +1,9 @@
 package org.example.knockin.service.impl;
  
-import org.example.knockin.entity.room.RoomSeekerProfile;
-import org.example.knockin.entity.room.RoomSeekerProfileRegion;
-import org.example.knockin.repository.room.RoomSeekerProfileRegionRepository;
+import org.example.knockin.room.entity.RoomSeekerProfile;
+import org.example.knockin.room.entity.RoomSeekerProfileRegion;
+import org.example.knockin.room.repository.RoomSeekerProfileRegionRepository;
+import org.example.knockin.room.service.impl.RoomSeekerProfileRegionServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

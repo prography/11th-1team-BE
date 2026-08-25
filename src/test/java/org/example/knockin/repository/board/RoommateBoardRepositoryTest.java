@@ -8,51 +8,56 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import jakarta.persistence.EntityManager;
-import org.example.knockin.config.QueryDslConfig;
-import org.example.knockin.dto.BoardListDto;
-import org.example.knockin.dto.BoardDetailDto.Response.RoomExtraOptionInfo;
-import org.example.knockin.entity.auth.Authentication;
-import org.example.knockin.entity.auth.AuthenticationType;
-import org.example.knockin.entity.auth.LoginProviderType;
-import org.example.knockin.entity.board.RoommateBoard;
-import org.example.knockin.entity.board.RoommateBoardFile;
-import org.example.knockin.entity.board.RoommateBoardInterest;
-import org.example.knockin.entity.board.RoommateBoardOption;
-import org.example.knockin.entity.file.BasicInformationFile;
-import org.example.knockin.entity.file.File;
-import org.example.knockin.entity.file.FileType;
-import org.example.knockin.entity.life.LifePattern;
-import org.example.knockin.entity.life.LifePatternFile;
-import org.example.knockin.entity.life.LifePatternInformation;
-import org.example.knockin.entity.life.LifePatternType;
-import org.example.knockin.entity.life.MemberLifePattern;
-import org.example.knockin.entity.life.PreferenceCondition;
-import org.example.knockin.entity.life.PreferenceConditionWeight;
-import org.example.knockin.entity.member.BasicInformation;
-import org.example.knockin.entity.member.Block;
-import org.example.knockin.entity.member.Gender;
-import org.example.knockin.entity.member.Member;
-import org.example.knockin.entity.member.MemberRole;
-import org.example.knockin.entity.member.MemberState;
-import org.example.knockin.entity.member.State;
-import org.example.knockin.entity.room.Region;
-import org.example.knockin.entity.room.RoomExtraOption;
-import org.example.knockin.entity.room.RoomExtraOptionFile;
-import org.example.knockin.entity.room.RoomType;
-import org.example.knockin.entity.room.RoomTypeFile;
-import org.example.knockin.repository.auth.AuthenticationRepository;
-import org.example.knockin.repository.auth.row.MemberAuthenticationRow;
-import org.example.knockin.repository.board.row.BasicInfoRow;
-import org.example.knockin.repository.board.row.BoardBaseRow;
-import org.example.knockin.repository.board.row.BoardInterestCountRow;
-import org.example.knockin.repository.board.row.BoardThumbnailRow;
-import org.example.knockin.repository.board.row.EditFormRow;
-import org.example.knockin.repository.life.MemberLifePatternRepository;
-import org.example.knockin.repository.life.PreferenceConditionRepository;
-import org.example.knockin.repository.life.PreferenceConditionWeightRepository;
-import org.example.knockin.repository.life.row.MatchingLifestyleRow;
-import org.example.knockin.repository.life.row.MatchingPreferenceConditionRow;
-import org.example.knockin.repository.life.row.MatchingPreferenceConditionWeightRow;
+import org.example.knockin.board.dto.BoardDetailDto;
+import org.example.knockin.board.repository.RoommateBoardFileRepository;
+import org.example.knockin.board.repository.RoommateBoardInterestRepository;
+import org.example.knockin.board.repository.RoommateBoardOptionRepository;
+import org.example.knockin.board.repository.RoommateBoardRepository;
+import org.example.knockin.global.config.QueryDslConfig;
+import org.example.knockin.board.dto.BoardListDto;
+import org.example.knockin.board.dto.BoardDetailDto.Response.RoomExtraOptionInfo;
+import org.example.knockin.authentication.entity.Authentication;
+import org.example.knockin.authentication.entity.AuthenticationType;
+import org.example.knockin.authentication.entity.LoginProviderType;
+import org.example.knockin.board.entity.RoommateBoard;
+import org.example.knockin.board.entity.RoommateBoardFile;
+import org.example.knockin.board.entity.RoommateBoardInterest;
+import org.example.knockin.board.entity.RoommateBoardOption;
+import org.example.knockin.member.entity.BasicInformationFile;
+import org.example.knockin.meta.entity.File;
+import org.example.knockin.meta.entity.FileType;
+import org.example.knockin.life.entity.LifePattern;
+import org.example.knockin.life.entity.LifePatternFile;
+import org.example.knockin.life.entity.LifePatternInformation;
+import org.example.knockin.life.entity.LifePatternType;
+import org.example.knockin.life.entity.MemberLifePattern;
+import org.example.knockin.life.entity.PreferenceCondition;
+import org.example.knockin.life.entity.PreferenceConditionWeight;
+import org.example.knockin.member.entity.BasicInformation;
+import org.example.knockin.member.entity.Block;
+import org.example.knockin.member.entity.Gender;
+import org.example.knockin.member.entity.Member;
+import org.example.knockin.member.entity.MemberRole;
+import org.example.knockin.member.entity.MemberState;
+import org.example.knockin.member.entity.State;
+import org.example.knockin.meta.entity.Region;
+import org.example.knockin.room.entity.RoomExtraOption;
+import org.example.knockin.room.entity.RoomExtraOptionFile;
+import org.example.knockin.room.entity.RoomType;
+import org.example.knockin.room.entity.RoomTypeFile;
+import org.example.knockin.authentication.repository.AuthenticationRepository;
+import org.example.knockin.authentication.repository.row.MemberAuthenticationRow;
+import org.example.knockin.board.repository.row.BasicInfoRow;
+import org.example.knockin.board.repository.row.BoardBaseRow;
+import org.example.knockin.board.repository.row.BoardInterestCountRow;
+import org.example.knockin.board.repository.row.BoardThumbnailRow;
+import org.example.knockin.board.repository.row.EditFormRow;
+import org.example.knockin.life.repository.MemberLifePatternRepository;
+import org.example.knockin.life.repository.PreferenceConditionRepository;
+import org.example.knockin.life.repository.PreferenceConditionWeightRepository;
+import org.example.knockin.life.repository.row.MatchingLifestyleRow;
+import org.example.knockin.life.repository.row.MatchingPreferenceConditionRow;
+import org.example.knockin.life.repository.row.MatchingPreferenceConditionWeightRow;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -554,7 +559,7 @@ class RoommateBoardRepositoryTest {
         entityManager.clear();
 
         // When
-        List<org.example.knockin.dto.BoardDetailDto.Response.FileDetailDto> images =
+        List<BoardDetailDto.Response.FileDetailDto> images =
                 roommateBoardFileRepository.getFileDetailDtoByBoardId(board.getId());
 
         // Then
@@ -644,14 +649,14 @@ class RoommateBoardRepositoryTest {
         entityManager.clear();
 
         // When
-        List<org.example.knockin.dto.BoardDetailDto.Response.Lifestyle> lifeStyles =
+        List<BoardDetailDto.Response.Lifestyle> lifeStyles =
                 memberLifePatternRepository.getLifeStyleDto(member.getId());
         List<MatchingLifestyleRow> matchingRows =
                 memberLifePatternRepository.findAllLifestyleByMemberIdIn(List.of(member.getId()));
 
         // Then
         assertThat(lifeStyles)
-                .extracting(org.example.knockin.dto.BoardDetailDto.Response.Lifestyle::getName)
+                .extracting(BoardDetailDto.Response.Lifestyle::getName)
                 .containsExactly("방문객", "취침");
         assertThat(lifeStyles)
                 .filteredOn(lifeStyle -> lifeStyle.getName().equals("취침"))
@@ -683,7 +688,7 @@ class RoommateBoardRepositoryTest {
         entityManager.clear();
 
         // When
-        List<org.example.knockin.dto.BoardDetailDto.Response.Condition> conditions =
+        List<BoardDetailDto.Response.Condition> conditions =
                 preferenceConditionRepository.getConditionDtoByMemberId(member.getId());
         List<MatchingPreferenceConditionRow> matchingRows =
                 preferenceConditionRepository.findAllPreferenceConditionByMemberIdIn(List.of(member.getId()));
@@ -717,7 +722,7 @@ class RoommateBoardRepositoryTest {
         entityManager.clear();
 
         // When
-        List<org.example.knockin.dto.BoardDetailDto.Response.ConditionWeight> conditionWeights =
+        List<BoardDetailDto.Response.ConditionWeight> conditionWeights =
                 preferenceConditionWeightRepository.getConditionWeightDtoByMemberId(member.getId());
         List<MatchingPreferenceConditionWeightRow> matchingRows =
                 preferenceConditionWeightRepository.findAllPreferenceConditionWeightByMemberIdIn(
@@ -725,13 +730,13 @@ class RoommateBoardRepositoryTest {
 
         // Then
         assertThat(conditionWeights)
-                .extracting(org.example.knockin.dto.BoardDetailDto.Response.ConditionWeight::getName)
+                .extracting(BoardDetailDto.Response.ConditionWeight::getName)
                 .containsExactlyInAnyOrder("취침", "소음");
         assertThat(conditionWeights)
-                .extracting(org.example.knockin.dto.BoardDetailDto.Response.ConditionWeight::getWeightConditionId)
+                .extracting(BoardDetailDto.Response.ConditionWeight::getWeightConditionId)
                 .doesNotContainNull();
         assertThat(conditionWeights)
-                .extracting(org.example.knockin.dto.BoardDetailDto.Response.ConditionWeight::getImageUrl)
+                .extracting(BoardDetailDto.Response.ConditionWeight::getImageUrl)
                 .containsExactlyInAnyOrder("sleep.png", "noise.png");
         assertThat(matchingRows)
                 .extracting(MatchingPreferenceConditionWeightRow::name,

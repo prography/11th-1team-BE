@@ -6,10 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.knockin.entity.auth.AuthenticationType;
-import org.example.knockin.entity.member.Gender;
-import org.example.knockin.entity.member.MemberRole;
-import org.example.knockin.entity.member.MemberState;
+import org.example.knockin.authentication.entity.AuthenticationType;
+import org.example.knockin.member.entity.Gender;
+import org.example.knockin.member.entity.MemberRole;
+import org.example.knockin.member.entity.MemberState;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

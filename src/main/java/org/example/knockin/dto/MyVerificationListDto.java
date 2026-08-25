@@ -6,8 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.knockin.entity.auth.ApproveType;
-import org.example.knockin.entity.auth.AuthenticationType;
+import org.example.knockin.authentication.entity.ApproveType;
 
 import java.time.LocalDateTime;
 

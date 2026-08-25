@@ -2,21 +2,67 @@ package org.example.knockin.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.knockin.agreement.service.MemberAgreementServiceImpl;
+import org.example.knockin.authentication.service.impl.AuthenticationServiceImpl;
+import org.example.knockin.board.dto.MyBoardListDto;
 import org.example.knockin.dto.*;
-import org.example.knockin.entity.agreement.AgreementLog;
-import org.example.knockin.entity.agreement.MemberAgreement;
-import org.example.knockin.entity.file.BasicInformationFile;
-import org.example.knockin.entity.file.File;
-import org.example.knockin.entity.file.FileType;
-import org.example.knockin.entity.life.*;
-import org.example.knockin.entity.member.BasicInformation;
-import org.example.knockin.entity.member.Member;
-import org.example.knockin.entity.member.MemberPrivacy;
-import org.example.knockin.entity.member.MemberPrivacyType;
-import org.example.knockin.entity.room.*;
-import org.example.knockin.exception.*;
-import org.example.knockin.service.FileService;
-import org.example.knockin.service.RoommateBoardService;
+import org.example.knockin.agreement.entity.AgreementLog;
+import org.example.knockin.agreement.entity.MemberAgreement;
+import org.example.knockin.member.entity.BasicInformationFile;
+import org.example.knockin.member.service.impl.BasicInformationServiceImpl;
+import org.example.knockin.member.service.impl.MemberPrivacyServiceImpl;
+import org.example.knockin.member.service.impl.MemberServiceImpl;
+import org.example.knockin.meta.entity.File;
+import org.example.knockin.meta.entity.FileType;
+import org.example.knockin.member.entity.BasicInformation;
+import org.example.knockin.member.entity.Member;
+import org.example.knockin.member.entity.MemberPrivacy;
+import org.example.knockin.member.entity.MemberPrivacyType;
+import org.example.knockin.meta.entity.Region;
+import org.example.knockin.global.exception.AuthErrorCode;
+import org.example.knockin.global.exception.BusinessException;
+import org.example.knockin.global.exception.FileErrorCode;
+import org.example.knockin.global.exception.MetaErrorCode;
+import org.example.knockin.global.exception.OnBoardErrorCode;
+import org.example.knockin.life.service.impl.LifeStyleServiceImpl;
+import org.example.knockin.life.service.impl.MemberLifePatternService;
+import org.example.knockin.life.service.impl.PreferenceConditionServiceImpl;
+import org.example.knockin.life.dto.ModifyPreferencesAllDto;
+import org.example.knockin.life.dto.ModifyPreferencesConditionsDto;
+import org.example.knockin.life.dto.ModifyPreferencesLifeStyleDto;
+import org.example.knockin.life.dto.ModifyProfileLifeStyleDto;
+import org.example.knockin.life.dto.MyPreferencesAllDto;
+import org.example.knockin.life.dto.MyProfileAllDto;
+import org.example.knockin.life.dto.SavePreferencesAllDto;
+import org.example.knockin.life.dto.SavePreferencesConditionsDto;
+import org.example.knockin.life.dto.SavePreferencesLifeStyleDto;
+import org.example.knockin.life.dto.SaveProfileLifeStyleDto;
+import org.example.knockin.life.entity.LifePatternInformation;
+import org.example.knockin.life.entity.MemberLifePattern;
+import org.example.knockin.life.entity.MemberLifePatternLog;
+import org.example.knockin.life.entity.MemberLifePatternLogDegree;
+import org.example.knockin.life.entity.PreferenceCondition;
+import org.example.knockin.life.entity.PreferenceConditionLog;
+import org.example.knockin.life.entity.PreferenceConditionLogDegree;
+import org.example.knockin.life.entity.PreferenceConditionWeight;
+import org.example.knockin.life.entity.PreferenceConditionWeightLog;
+import org.example.knockin.life.entity.PreferenceConditionWeightLogDegree;
+import org.example.knockin.mate.service.impl.MyRoomMateServiceImpl;
+import org.example.knockin.room.dto.ModifyProfileRoomInfoDto;
+import org.example.knockin.room.dto.SaveProfileRoomInfoDto;
+import org.example.knockin.room.entity.OfferRoomType;
+import org.example.knockin.room.entity.RoomOfferProfile;
+import org.example.knockin.room.entity.RoomProfile;
+import org.example.knockin.room.entity.RoomProfileType;
+import org.example.knockin.room.entity.RoomSeekerProfile;
+import org.example.knockin.room.entity.RoomSeekerProfileRegion;
+import org.example.knockin.room.entity.RoomType;
+import org.example.knockin.room.entity.SeekerRoomType;
+import org.example.knockin.room.service.impl.RoomProfileServiceImpl;
+import org.example.knockin.room.service.impl.RoomSeekerProfileRegionServiceImpl;
+import org.example.knockin.room.service.impl.RoomTypeServiceImpl;
+import org.example.knockin.meta.service.FileService;
+import org.example.knockin.board.service.RoommateBoardService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -160,7 +206,8 @@ public class OnBoardingServiceImpl {
             case OFFER -> {
                 List<OfferRoomType> offerRoomTypeList = new ArrayList<>();
 
-                Region region = metaService.findByRegionId(request.getRegion().getFirst()).orElseThrow(() -> new BusinessException(MetaErrorCode.REGION_NOT_FOUND));
+                Region region = metaService.findByRegionId(request.getRegion().getFirst()).orElseThrow(() -> new BusinessException(
+                        MetaErrorCode.REGION_NOT_FOUND));
                 RoomOfferProfile roomOfferProfile = roomProfileService.save(RoomOfferProfile.builder()
                         .member(member)
                         .region(region)
@@ -190,7 +237,8 @@ public class OnBoardingServiceImpl {
                 roomProfile = roomSeekerProfile;
 
                 metaService.findByRegions(request.getRegion()).forEach(item -> {
-                    roomSeekerProfileRegionList.add(RoomSeekerProfileRegion.builder().roomSeekerProfile(roomSeekerProfile).region(item).build());
+                    roomSeekerProfileRegionList.add(
+                            RoomSeekerProfileRegion.builder().roomSeekerProfile(roomSeekerProfile).region(item).build());
                 });
                 roomSeekerProfileRegionService.saveAll(roomSeekerProfileRegionList);
 

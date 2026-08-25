@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.knockin.entity.auth.LoginProviderType;
-import org.example.knockin.entity.member.MemberRole;
+import org.example.knockin.member.entity.MemberRole;
 
 @Data
 public class MyAccountDto {

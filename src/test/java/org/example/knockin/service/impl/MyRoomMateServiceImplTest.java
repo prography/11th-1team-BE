@@ -14,34 +14,43 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import org.example.knockin.dto.CalendarDto;
-import org.example.knockin.dto.CalendarEditDto;
-import org.example.knockin.dto.HouseRuleDto;
-import org.example.knockin.dto.HouseRuleListDto;
-import org.example.knockin.dto.MyRoommateCardDto;
-import org.example.knockin.dto.MyRoommateDailyCalendarListDto;
-import org.example.knockin.dto.MyRoommateMonthlyCalendarListDto;
-import org.example.knockin.dto.RepeatCalendarModifyDto;
-import org.example.knockin.dto.RepeatCalendarModifyType;
-import org.example.knockin.entity.chat.ChattingRequired;
-import org.example.knockin.entity.chat.ChattingRoom;
-import org.example.knockin.entity.chat.ChattingScore;
-import org.example.knockin.entity.member.Gender;
-import org.example.knockin.entity.member.Member;
-import org.example.knockin.entity.member.MemberPrivacy;
-import org.example.knockin.entity.member.MemberPrivacyType;
-import org.example.knockin.entity.room.MyRoommate;
-import org.example.knockin.entity.room.RepeatType;
-import org.example.knockin.entity.room.RoommateMatchingRequired;
-import org.example.knockin.entity.room.RoommateRequiredStatus;
-import org.example.knockin.entity.room.RoommateScore;
-import org.example.knockin.exception.BusinessException;
-import org.example.knockin.exception.CommonErrorCode;
-import org.example.knockin.exception.MemberErrorCode;
-import org.example.knockin.exception.MyRoommateErrorCode;
+import org.example.knockin.chat.service.impl.ChattingScoreServiceImpl;
+import org.example.knockin.mate.dto.CalendarDto;
+import org.example.knockin.mate.dto.CalendarEditDto;
+import org.example.knockin.mate.entity.HouseRuleDto;
+import org.example.knockin.mate.entity.HouseRuleListDto;
+import org.example.knockin.mate.dto.MyRoommateCardDto;
+import org.example.knockin.mate.dto.MyRoommateDailyCalendarListDto;
+import org.example.knockin.mate.dto.MyRoommateMonthlyCalendarListDto;
+import org.example.knockin.mate.dto.RepeatCalendarModifyDto;
+import org.example.knockin.mate.dto.RepeatCalendarModifyType;
+import org.example.knockin.chat.entity.ChattingRequired;
+import org.example.knockin.chat.entity.ChattingRoom;
+import org.example.knockin.chat.entity.ChattingScore;
+import org.example.knockin.member.entity.Gender;
+import org.example.knockin.member.entity.Member;
+import org.example.knockin.member.entity.MemberPrivacy;
+import org.example.knockin.member.entity.MemberPrivacyType;
+import org.example.knockin.mate.dto.MyRoommateDto;
+import org.example.knockin.mate.dto.RepeatCalendarDto;
+import org.example.knockin.mate.entity.MyRoommate;
+import org.example.knockin.mate.entity.RepeatType;
+import org.example.knockin.mate.entity.RoommateMatchingRequired;
+import org.example.knockin.mate.entity.RoommateRequiredStatus;
+import org.example.knockin.mate.entity.RoommateScore;
+import org.example.knockin.global.exception.BusinessException;
+import org.example.knockin.global.exception.CommonErrorCode;
+import org.example.knockin.global.exception.MemberErrorCode;
+import org.example.knockin.global.exception.MyRoommateErrorCode;
 import org.example.knockin.global.util.DateUtils;
-import org.example.knockin.repository.member.row.ChattingRoomBasicInfoRow;
-import org.example.knockin.repository.room.MyRoommateRepository;
+import org.example.knockin.mate.service.impl.CalendarServiceImpl;
+import org.example.knockin.mate.service.impl.HouseRuleServiceImpl;
+import org.example.knockin.member.repository.row.ChattingRoomBasicInfoRow;
+import org.example.knockin.mate.repository.MyRoommateRepository;
+import org.example.knockin.mate.service.impl.MyRoomMateServiceImpl;
+import org.example.knockin.mate.service.impl.MyRoommateScoreServiceImpl;
+import org.example.knockin.member.service.impl.BasicInformationServiceImpl;
+import org.example.knockin.member.service.impl.MemberPrivacyServiceImpl;
 import org.example.knockin.service.RoommateScoreService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -257,7 +266,7 @@ class MyRoomMateServiceImplTest {
         when(memberPrivacyService.findByMemberId(requesteeId)).thenReturn(List.of(requesteePrivacy));
 
         // When
-        org.example.knockin.dto.MyRoommateDto.Response response = myRoomMateService.deleteMyRoommate(myRoommateId, requesterId);
+        MyRoommateDto.Response response = myRoomMateService.deleteMyRoommate(myRoommateId, requesterId);
 
         // Then
         assertThat(myRoommate.getIsDeleted()).isTrue();
@@ -558,7 +567,7 @@ class MyRoomMateServiceImplTest {
         RepeatCalendarModifyDto.Request request = new RepeatCalendarModifyDto.Request();
         request.setCalendar(calendarRequest("청소", "거실 청소", memberIds).getCalendar());
         request.setCategoryName("청소");
-        request.setRepeatInfo(org.example.knockin.dto.RepeatCalendarDto.RepeatCalendarInfo.builder()
+        request.setRepeatInfo(RepeatCalendarDto.RepeatCalendarInfo.builder()
                 .endDate(LocalDateTime.of(2026, 8, 12, 10, 0))
                 .repeatType(RepeatType.WEEKLY)
                 .build());

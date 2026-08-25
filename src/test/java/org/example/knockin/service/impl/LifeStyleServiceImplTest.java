@@ -1,14 +1,15 @@
 package org.example.knockin.service.impl;
 
-import org.example.knockin.dto.BoLifeStylePatternDetailDto;
-import org.example.knockin.dto.BoLifeStylePatternListDto;
-import org.example.knockin.entity.life.LifePattern;
-import org.example.knockin.entity.life.LifePatternInformation;
-import org.example.knockin.entity.life.LifePatternType;
-import org.example.knockin.exception.BusinessException;
-import org.example.knockin.exception.LifePatternErrorCode;
-import org.example.knockin.repository.life.LifePatternInformationRepository;
-import org.example.knockin.repository.life.LifePatternRepository;
+import org.example.knockin.life.service.impl.LifeStyleServiceImpl;
+import org.example.knockin.life.dto.BoLifeStylePatternDetailDto;
+import org.example.knockin.life.dto.BoLifeStylePatternListDto;
+import org.example.knockin.life.entity.LifePattern;
+import org.example.knockin.life.entity.LifePatternInformation;
+import org.example.knockin.life.entity.LifePatternType;
+import org.example.knockin.global.exception.BusinessException;
+import org.example.knockin.global.exception.LifePatternErrorCode;
+import org.example.knockin.life.repository.LifePatternInformationRepository;
+import org.example.knockin.life.repository.LifePatternRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

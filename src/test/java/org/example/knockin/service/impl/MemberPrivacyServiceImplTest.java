@@ -8,16 +8,17 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 import java.util.List;
-import org.example.knockin.entity.member.MemberPrivacyType;
-import org.example.knockin.repository.member.MemberPrivacyRepository;
+import org.example.knockin.member.entity.MemberPrivacyType;
+import org.example.knockin.member.repository.MemberPrivacyRepository;
+import org.example.knockin.member.service.impl.MemberPrivacyServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.example.knockin.entity.member.Member;
-import org.example.knockin.entity.member.MemberPrivacy;
+import org.example.knockin.member.entity.Member;
+import org.example.knockin.member.entity.MemberPrivacy;
  
 @ExtendWith(MockitoExtension.class)
 class MemberPrivacyServiceImplTest {

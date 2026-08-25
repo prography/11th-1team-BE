@@ -1,7 +1,8 @@
 package org.example.knockin.service.impl;
  
-import org.example.knockin.entity.room.Region;
-import org.example.knockin.repository.room.RegionRepository;
+import org.example.knockin.meta.entity.Region;
+import org.example.knockin.meta.service.impl.RegionServiceImpl;
+import org.example.knockin.meta.repository.RegionRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

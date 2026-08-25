@@ -1,6 +1,6 @@
 package org.example.knockin.dto;
 
-import org.example.knockin.entity.auth.LoginProviderType;
+import org.example.knockin.authentication.entity.LoginProviderType;
 
 public interface OAuth2UserInfo {
     String getId();

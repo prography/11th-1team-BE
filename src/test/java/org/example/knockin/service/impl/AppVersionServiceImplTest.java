@@ -1,14 +1,15 @@
 package org.example.knockin.service.impl;
 
-import org.example.knockin.dto.AppVersionListDto;
-import org.example.knockin.dto.AppVersionModifyDto;
-import org.example.knockin.dto.AppVersionSaveDto;
-import org.example.knockin.entity.utils.AppVersion;
-import org.example.knockin.entity.utils.PlatformType;
-import org.example.knockin.entity.utils.UpdateType;
-import org.example.knockin.exception.AppVersionErrorCode;
-import org.example.knockin.exception.BusinessException;
-import org.example.knockin.repository.utils.AppVersionRepository;
+import org.example.knockin.meta.dto.AppVersionListDto;
+import org.example.knockin.meta.dto.AppVersionModifyDto;
+import org.example.knockin.meta.dto.AppVersionSaveDto;
+import org.example.knockin.meta.entity.AppVersion;
+import org.example.knockin.meta.entity.PlatformType;
+import org.example.knockin.meta.entity.UpdateType;
+import org.example.knockin.global.exception.AppVersionErrorCode;
+import org.example.knockin.global.exception.BusinessException;
+import org.example.knockin.meta.service.impl.AppVersionServiceImpl;
+import org.example.knockin.meta.repository.AppVersionRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

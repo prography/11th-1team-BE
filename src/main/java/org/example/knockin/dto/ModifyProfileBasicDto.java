@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.knockin.entity.member.Gender;
+import org.example.knockin.member.entity.Gender;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

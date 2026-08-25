@@ -8,10 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.knockin.entity.auth.AuthenticationType;
-import org.example.knockin.entity.life.LifePatternType;
-import org.example.knockin.entity.member.Gender;
-import org.example.knockin.entity.room.RoomProfileType;
+import org.example.knockin.authentication.entity.AuthenticationType;
+import org.example.knockin.life.entity.LifePatternType;
+import org.example.knockin.member.entity.Gender;
+import org.example.knockin.room.entity.RoomProfileType;
 import java.util.List;
 
 @Data

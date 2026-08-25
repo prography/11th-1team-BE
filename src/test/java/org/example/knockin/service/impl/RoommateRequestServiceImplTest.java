@@ -14,33 +14,45 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import org.example.knockin.dto.ChatSocketResponse;
+import org.example.knockin.meta.service.AlarmServiceImpl;
+import org.example.knockin.meta.service.PushNotificationServiceImpl;
+import org.example.knockin.chat.dto.ChatSocketResponse;
+import org.example.knockin.chat.service.impl.ChatRoomMemberServiceImpl;
+import org.example.knockin.chat.service.impl.ChattingScoreServiceImpl;
 import org.example.knockin.dto.EventType;
-import org.example.knockin.dto.RoommateRequestDto;
-import org.example.knockin.dto.RoommateRequestDto.RoommateMatchingRequiredInfo;
-import org.example.knockin.dto.RoommateRequestListDto;
-import org.example.knockin.entity.alarm.AlarmSettingType;
-import org.example.knockin.entity.alarm.AlarmType;
-import org.example.knockin.entity.chat.ChatRoomMember;
-import org.example.knockin.entity.chat.ChattingRequired;
-import org.example.knockin.entity.chat.ChattingRoom;
-import org.example.knockin.entity.member.BasicInformation;
-import org.example.knockin.entity.member.Gender;
-import org.example.knockin.entity.member.Member;
-import org.example.knockin.entity.member.MemberPrivacy;
-import org.example.knockin.entity.member.MemberPrivacyType;
-import org.example.knockin.entity.room.MyRoommate;
-import org.example.knockin.entity.room.RoommateMatchingRequired;
-import org.example.knockin.entity.room.RoommateMatchingRequiredAlarm;
-import org.example.knockin.entity.room.RoommateRequiredStatus;
-import org.example.knockin.exception.BusinessException;
-import org.example.knockin.exception.MemberErrorCode;
-import org.example.knockin.exception.RequiredErrorCode;
-import org.example.knockin.repository.chat.ChatRoomMemberRepository;
-import org.example.knockin.repository.member.BasicInformationRepository;
-import org.example.knockin.repository.room.MyRoommateRepository;
-import org.example.knockin.repository.room.RoommateMatchingRequiredAlarmRepository;
-import org.example.knockin.repository.room.RoommateMatchingRequiredRepository;
+import org.example.knockin.mate.dto.RoommateRequestDto;
+import org.example.knockin.mate.dto.RoommateRequestDto.RoommateMatchingRequiredInfo;
+import org.example.knockin.mate.dto.RoommateRequestListDto;
+import org.example.knockin.meta.entity.AlarmSettingType;
+import org.example.knockin.meta.entity.AlarmType;
+import org.example.knockin.chat.entity.ChatRoomMember;
+import org.example.knockin.chat.entity.ChattingRequired;
+import org.example.knockin.chat.entity.ChattingRoom;
+import org.example.knockin.member.entity.BasicInformation;
+import org.example.knockin.member.entity.Gender;
+import org.example.knockin.member.entity.Member;
+import org.example.knockin.member.entity.MemberPrivacy;
+import org.example.knockin.member.entity.MemberPrivacyType;
+import org.example.knockin.mate.entity.MyRoommate;
+import org.example.knockin.mate.entity.RoommateMatchingRequired;
+import org.example.knockin.mate.entity.RoommateMatchingRequiredAlarm;
+import org.example.knockin.mate.entity.RoommateRequiredStatus;
+import org.example.knockin.global.exception.BusinessException;
+import org.example.knockin.global.exception.MemberErrorCode;
+import org.example.knockin.global.exception.RequiredErrorCode;
+import org.example.knockin.chat.repository.ChatRoomMemberRepository;
+import org.example.knockin.mate.service.impl.RoommateMatchingRequiredAlarmServiceImpl;
+import org.example.knockin.mate.service.impl.RoommateMatchingRequiredServiceImpl;
+import org.example.knockin.mate.service.impl.RoommateRequestServiceImpl;
+import org.example.knockin.member.repository.BasicInformationFileRepository;
+import org.example.knockin.member.repository.BasicInformationRepository;
+import org.example.knockin.mate.repository.MyRoommateRepository;
+import org.example.knockin.mate.repository.RoommateMatchingRequiredAlarmRepository;
+import org.example.knockin.mate.repository.RoommateMatchingRequiredRepository;
+import org.example.knockin.mate.service.impl.MyRoomMateServiceImpl;
+import org.example.knockin.mate.service.impl.MyRoommateScoreServiceImpl;
+import org.example.knockin.member.service.impl.BasicInformationServiceImpl;
+import org.example.knockin.member.service.impl.MemberPrivacyServiceImpl;
 import org.example.knockin.service.RoommateScoreService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -103,7 +115,8 @@ class RoommateRequestServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        BasicInformationServiceImpl basicInformationService = new BasicInformationServiceImpl(basicInformationRepository, org.mockito.Mockito.mock(org.example.knockin.repository.file.BasicInformationFileRepository.class));
+        BasicInformationServiceImpl basicInformationService = new BasicInformationServiceImpl(basicInformationRepository, org.mockito.Mockito.mock(
+                BasicInformationFileRepository.class));
         MyRoomMateServiceImpl myRoomMateService = new MyRoomMateServiceImpl(
                 myRoommateRepository,
                 roommateScoreService,

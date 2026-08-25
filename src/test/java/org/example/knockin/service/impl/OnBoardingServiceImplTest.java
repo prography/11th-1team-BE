@@ -1,16 +1,41 @@
 package org.example.knockin.service.impl;
  
+import org.example.knockin.agreement.service.MemberAgreementServiceImpl;
+import org.example.knockin.board.dto.MyBoardListDto;
 import org.example.knockin.dto.*;
-import org.example.knockin.entity.agreement.AgreementLog;
-import org.example.knockin.entity.agreement.MemberAgreement;
-import org.example.knockin.entity.life.*;
-import org.example.knockin.entity.member.BasicInformation;
-import org.example.knockin.entity.member.Member;
-import org.example.knockin.entity.member.MemberPrivacy;
-import org.example.knockin.entity.member.MemberPrivacyType;
-import org.example.knockin.entity.room.*;
-import org.example.knockin.exception.BusinessException;
-import org.example.knockin.service.RoommateBoardService;
+import org.example.knockin.agreement.entity.AgreementLog;
+import org.example.knockin.agreement.entity.MemberAgreement;
+import org.example.knockin.member.entity.BasicInformation;
+import org.example.knockin.member.entity.Member;
+import org.example.knockin.member.entity.MemberPrivacy;
+import org.example.knockin.member.entity.MemberPrivacyType;
+import org.example.knockin.member.service.impl.BasicInformationServiceImpl;
+import org.example.knockin.member.service.impl.MemberPrivacyServiceImpl;
+import org.example.knockin.member.service.impl.MemberServiceImpl;
+import org.example.knockin.meta.entity.Region;
+import org.example.knockin.global.exception.BusinessException;
+import org.example.knockin.board.service.RoommateBoardService;
+import org.example.knockin.life.service.impl.LifeStyleServiceImpl;
+import org.example.knockin.life.service.impl.MemberLifePatternService;
+import org.example.knockin.life.service.impl.PreferenceConditionServiceImpl;
+import org.example.knockin.life.dto.ModifyProfileLifeStyleDto;
+import org.example.knockin.life.dto.SavePreferencesConditionsDto;
+import org.example.knockin.life.dto.SaveProfileLifeStyleDto;
+import org.example.knockin.life.entity.LifePattern;
+import org.example.knockin.life.entity.LifePatternInformation;
+import org.example.knockin.life.entity.MemberLifePattern;
+import org.example.knockin.life.entity.PreferenceConditionWeight;
+import org.example.knockin.life.entity.PreferenceConditionWeightLog;
+import org.example.knockin.mate.service.impl.MyRoomMateServiceImpl;
+import org.example.knockin.room.dto.ModifyProfileRoomInfoDto;
+import org.example.knockin.room.dto.SaveProfileRoomInfoDto;
+import org.example.knockin.room.entity.RoomOfferProfile;
+import org.example.knockin.room.entity.RoomProfileType;
+import org.example.knockin.room.entity.RoomSeekerProfile;
+import org.example.knockin.room.entity.RoomType;
+import org.example.knockin.room.service.impl.RoomProfileServiceImpl;
+import org.example.knockin.room.service.impl.RoomSeekerProfileRegionServiceImpl;
+import org.example.knockin.room.service.impl.RoomTypeServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -297,8 +322,10 @@ class OnBoardingServiceImplTest {
         SavePreferencesConditionsDto.Request request = new SavePreferencesConditionsDto.Request(List.of(1L));
  
         given(metaService.findLifePatternByLifeStyle(any())).willReturn(List.of(mock(LifePattern.class)));
-        given(preferenceConditionService.preferenceConditionWeightSaveAll(any())).willReturn(List.of(mock(PreferenceConditionWeight.class)));
-        given(preferenceConditionService.preferenceConditionWeightLogSaveAll(any())).willReturn(List.of(mock(PreferenceConditionWeightLog.class)));
+        given(preferenceConditionService.preferenceConditionWeightSaveAll(any())).willReturn(List.of(mock(
+                PreferenceConditionWeight.class)));
+        given(preferenceConditionService.preferenceConditionWeightLogSaveAll(any())).willReturn(List.of(mock(
+                PreferenceConditionWeightLog.class)));
  
         SavePreferencesConditionsDto.Response response = onBoardingService.savePreferenceConditionLogic(request, memberId);
  

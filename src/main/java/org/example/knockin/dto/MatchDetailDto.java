@@ -6,9 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.knockin.entity.auth.AuthenticationType;
-import org.example.knockin.entity.member.Gender;
-import org.example.knockin.entity.room.RoomProfileType;
+import org.example.knockin.authentication.entity.AuthenticationType;
+import org.example.knockin.member.entity.Gender;
+import org.example.knockin.room.entity.RoomProfileType;
 
 @Data
 public class MatchDetailDto {

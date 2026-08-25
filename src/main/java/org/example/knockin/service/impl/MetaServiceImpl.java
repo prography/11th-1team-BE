@@ -1,14 +1,26 @@
 package org.example.knockin.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.example.knockin.agreement.dto.TermsDetailDto;
+import org.example.knockin.agreement.dto.TermsListDto;
+import org.example.knockin.agreement.service.AgreementServiceImpl;
 import org.example.knockin.dto.*;
-import org.example.knockin.entity.agreement.Agreement;
-import org.example.knockin.entity.agreement.AgreementLog;
-import org.example.knockin.entity.life.LifePattern;
-import org.example.knockin.entity.life.LifePatternInformation;
-import org.example.knockin.entity.room.Region;
-import org.example.knockin.entity.room.RoomExtraOption;
-import org.example.knockin.entity.room.RoomType;
+import org.example.knockin.agreement.entity.Agreement;
+import org.example.knockin.agreement.entity.AgreementLog;
+import org.example.knockin.life.service.impl.LifeStyleServiceImpl;
+import org.example.knockin.life.dto.MetaLifestylePatternsDto;
+import org.example.knockin.life.entity.LifePattern;
+import org.example.knockin.life.entity.LifePatternInformation;
+import org.example.knockin.meta.dto.PopularSearchDto;
+import org.example.knockin.meta.entity.Region;
+import org.example.knockin.meta.service.impl.RegionServiceImpl;
+import org.example.knockin.meta.service.impl.SearchServiceImpl;
+import org.example.knockin.room.dto.MetaRoomAddOptionsDto;
+import org.example.knockin.room.dto.MetaRoomTypesDto;
+import org.example.knockin.room.entity.RoomExtraOption;
+import org.example.knockin.room.entity.RoomType;
+import org.example.knockin.room.service.impl.RoomExtraOptionServiceImpl;
+import org.example.knockin.room.service.impl.RoomTypeServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

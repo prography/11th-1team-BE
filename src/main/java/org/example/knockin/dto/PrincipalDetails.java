@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.example.knockin.entity.member.Member;
+import org.example.knockin.member.entity.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

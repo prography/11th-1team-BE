@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.knockin.entity.member.DevicePlatform;
+import org.example.knockin.member.entity.DevicePlatform;
 
 @Data
 public class FcmDto {

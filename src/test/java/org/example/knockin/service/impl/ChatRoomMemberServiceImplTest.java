@@ -5,9 +5,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.example.knockin.exception.BusinessException;
-import org.example.knockin.exception.ChattingErrorCode;
-import org.example.knockin.repository.chat.ChatRoomMemberRepository;
+import org.example.knockin.chat.service.impl.ChatRoomMemberServiceImpl;
+import org.example.knockin.global.exception.BusinessException;
+import org.example.knockin.global.exception.ChattingErrorCode;
+import org.example.knockin.chat.repository.ChatRoomMemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
