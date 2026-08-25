@@ -1,7 +1,7 @@
 package org.example.knockin.global.auth.util;
 
 import java.security.Principal;
-import org.example.knockin.dto.PrincipalDetails;
+import org.example.knockin.global.auth.dto.PrincipalDetails;
 import org.example.knockin.global.exception.AuthErrorCode;
 import org.example.knockin.global.exception.AuthException;
 import org.springframework.security.core.Authentication;

@@ -14,7 +14,7 @@ import org.example.knockin.authentication.dto.BoVerificationApproveListDto;
 import org.example.knockin.authentication.dto.BoVerificationCancelListDto;
 import org.example.knockin.authentication.dto.BoVerificationWaitingDetailDto;
 import org.example.knockin.authentication.dto.BoVerificationWaitingListDto;
-import org.example.knockin.dto.*;
+import org.example.knockin.authentication.dto.MyVerificationListDto;
 import org.example.knockin.authentication.entity.ApproveType;
 import org.example.knockin.authentication.entity.AuthenticationType;
 import org.example.knockin.member.entity.Member;

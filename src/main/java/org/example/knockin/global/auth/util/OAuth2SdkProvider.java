@@ -3,9 +3,9 @@ package org.example.knockin.global.auth.util;
 import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.example.knockin.dto.AppleSdkRequest;
-import org.example.knockin.dto.KakaoSdkRequest;
-import org.example.knockin.dto.OAuth2SdkRequest;
+import org.example.knockin.global.auth.dto.AppleSdkRequest;
+import org.example.knockin.global.auth.dto.KakaoSdkRequest;
+import org.example.knockin.global.auth.dto.OAuth2SdkRequest;
 
 @Getter
 @AllArgsConstructor

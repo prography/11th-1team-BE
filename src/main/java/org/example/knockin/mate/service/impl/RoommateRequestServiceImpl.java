@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.knockin.meta.service.PushNotificationServiceImpl;
 import org.example.knockin.chat.dto.ChatSocketResponse;
 import org.example.knockin.chat.service.impl.ChatRoomMemberServiceImpl;
-import org.example.knockin.dto.EventType;
+import org.example.knockin.chat.dto.EventType;
 import org.example.knockin.mate.dto.RoommateRequestDto;
 import org.example.knockin.mate.dto.RoommateRequestDto.Response;
 import org.example.knockin.mate.dto.RoommateRequestDto.RoommateMatchingRequiredInfo;

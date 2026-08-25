@@ -3,7 +3,9 @@ package org.example.knockin.global.auth.util;
 import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.example.knockin.dto.*;
+import org.example.knockin.global.auth.dto.AppleUserInfo;
+import org.example.knockin.global.auth.dto.KakaoUserInfo;
+import org.example.knockin.global.auth.dto.OAuth2UserInfo;
 
 @Getter
 @AllArgsConstructor

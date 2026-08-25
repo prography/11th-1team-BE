@@ -1,6 +1,7 @@
 package org.example.knockin.authentication.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.example.knockin.authentication.dto.MyVerificationListDto;
 import org.example.knockin.meta.service.AlarmServiceImpl;
 import org.example.knockin.meta.service.PushNotificationServiceImpl;
 import org.example.knockin.authentication.dto.BoVerificationApproveListDto;
@@ -14,7 +15,6 @@ import org.example.knockin.global.entity.AuthenticateAlarmTemplate;
 import org.example.knockin.authentication.entity.Authentication;
 import org.example.knockin.authentication.entity.AuthenticationApprove;
 import org.example.knockin.authentication.entity.AuthenticationType;
-import org.example.knockin.dto.*;
 import org.example.knockin.meta.entity.Alarm;
 import org.example.knockin.meta.entity.AlarmSettingType;
 import org.example.knockin.meta.entity.AlarmType;

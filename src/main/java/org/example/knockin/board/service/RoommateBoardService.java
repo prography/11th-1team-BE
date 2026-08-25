@@ -3,13 +3,15 @@ package org.example.knockin.board.service;
 import java.io.IOException;
 import java.util.List;
 
+import org.example.knockin.board.dto.BoBoardDetailDto;
+import org.example.knockin.board.dto.BoBoardListDto;
 import org.example.knockin.board.dto.BoardDetailDto;
 import org.example.knockin.board.dto.BoardDto;
 import org.example.knockin.board.dto.BoardEditDto;
 import org.example.knockin.board.dto.BoardListDto;
 import org.example.knockin.board.dto.BoardModifyDto;
 import org.example.knockin.board.dto.MyBoardListDto;
-import org.example.knockin.dto.*;
+import org.example.knockin.declaration.dto.ReportDto;
 import org.example.knockin.board.dto.BoardListDto.Response;
 import org.example.knockin.board.entity.RoommateBoard;
 import org.jspecify.annotations.Nullable;

@@ -7,7 +7,7 @@ import org.example.knockin.mate.dto.RoommateRequestDto;
 import org.example.knockin.mate.dto.RoommateRequestDto.Response;
 import org.example.knockin.mate.dto.RoommateRequestListDto;
 import org.example.knockin.global.api.CommonResponse;
-import org.example.knockin.dto.PrincipalDetails;
+import org.example.knockin.global.auth.dto.PrincipalDetails;
 import org.example.knockin.mate.service.impl.RoommateRequestServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

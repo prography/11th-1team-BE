@@ -1,5 +1,6 @@
 package org.example.knockin.service.impl;
 
+import org.example.knockin.authentication.dto.MyVerificationListDto;
 import org.example.knockin.meta.service.AlarmServiceImpl;
 import org.example.knockin.meta.service.PushNotificationServiceImpl;
 import org.example.knockin.authentication.dto.BoVerificationApproveListDto;
@@ -9,7 +10,6 @@ import org.example.knockin.authentication.dto.BoVerificationWaitingListDto;
 import org.example.knockin.authentication.dto.EmailConfirmDto;
 import org.example.knockin.authentication.dto.EmailSendDto;
 import org.example.knockin.authentication.service.impl.AuthenticationServiceImpl;
-import org.example.knockin.dto.*;
 import org.example.knockin.authentication.entity.ApproveType;
 import org.example.knockin.authentication.entity.Authentication;
 import org.example.knockin.authentication.entity.AuthenticationApprove;

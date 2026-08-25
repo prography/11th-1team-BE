@@ -53,7 +53,7 @@ import org.example.knockin.member.repository.MemberRepository;
 import org.example.knockin.member.repository.row.ChattingRoomBasicInfoRow;
 import org.example.knockin.member.service.impl.BasicInformationServiceImpl;
 import org.example.knockin.member.service.impl.MemberServiceImpl;
-import org.example.knockin.service.RoommateScoreService;
+import org.example.knockin.matching.service.RoommateScoreService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

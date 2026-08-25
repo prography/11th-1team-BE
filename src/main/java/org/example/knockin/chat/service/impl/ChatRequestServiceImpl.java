@@ -23,7 +23,7 @@ import org.example.knockin.global.util.HasMemberId;
 import org.example.knockin.chat.repository.row.ChatRequestListRow;
 import org.example.knockin.life.repository.row.MatchingLifestyleRow;
 import org.example.knockin.member.repository.row.ChattingRoomBasicInfoRow;
-import org.example.knockin.service.RoommateScoreService;
+import org.example.knockin.matching.service.RoommateScoreService;
 import org.example.knockin.member.service.impl.BasicInformationServiceImpl;
 import org.example.knockin.life.service.impl.MemberLifePatternService;
 import org.example.knockin.member.service.impl.MemberServiceImpl;

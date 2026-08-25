@@ -10,7 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.*;
-import org.example.knockin.dto.BoNoticeDto;
+import org.example.knockin.meta.dto.BoNoticeDto;
 import org.example.knockin.member.entity.Member;
 import org.example.knockin.global.entity.BaseEntity;
 import org.hibernate.annotations.ColumnDefault;

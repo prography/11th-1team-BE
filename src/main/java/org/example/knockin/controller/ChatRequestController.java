@@ -10,7 +10,7 @@ import org.example.knockin.chat.dto.ChatRequestDto;
 import org.example.knockin.chat.dto.ChatRequestDto.Response;
 import org.example.knockin.chat.dto.ChatRequestListDto;
 import org.example.knockin.global.api.CommonResponse;
-import org.example.knockin.dto.PrincipalDetails;
+import org.example.knockin.global.auth.dto.PrincipalDetails;
 import org.example.knockin.chat.service.impl.ChatRequestServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

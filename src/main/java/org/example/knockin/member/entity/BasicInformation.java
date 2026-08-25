@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 import java.time.LocalDate;
 
 import lombok.*;
-import org.example.knockin.dto.ModifyProfileBasicDto;
+import org.example.knockin.member.dto.ModifyProfileBasicDto;
 import org.example.knockin.global.entity.BaseEntity;
 
 import org.hibernate.annotations.OnDelete;

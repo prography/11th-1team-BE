@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.knockin.member.dto.BlockDto;
 import org.example.knockin.member.dto.BlockDto.Response;
 import org.example.knockin.member.dto.BlockListDto;
-import org.example.knockin.dto.PrincipalDetails;
+import org.example.knockin.global.auth.dto.PrincipalDetails;
 import org.example.knockin.global.api.CommonResponse;
 import org.example.knockin.member.service.impl.BlockServiceImpl;
 import org.springframework.data.domain.Pageable;

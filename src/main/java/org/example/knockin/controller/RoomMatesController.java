@@ -9,7 +9,7 @@ import org.example.knockin.mate.entity.HouseRuleDetailDto;
 import org.example.knockin.mate.entity.HouseRuleDto;
 import org.example.knockin.mate.entity.HouseRuleDto.Response;
 import org.example.knockin.global.api.CommonResponse;
-import org.example.knockin.dto.PrincipalDetails;
+import org.example.knockin.global.auth.dto.PrincipalDetails;
 import org.example.knockin.mate.dto.CalendarCategoryDto;
 import org.example.knockin.mate.dto.CalendarDto;
 import org.example.knockin.mate.dto.CalendarEditDto;

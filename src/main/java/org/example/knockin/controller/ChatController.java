@@ -14,7 +14,7 @@ import org.example.knockin.chat.dto.ChatRoomDetailDto;
 import org.example.knockin.chat.dto.ChatRoomListDto;
 import org.example.knockin.chat.dto.ChatRoomListDto.Response;
 import org.example.knockin.global.api.CommonResponse;
-import org.example.knockin.dto.PrincipalDetails;
+import org.example.knockin.global.auth.dto.PrincipalDetails;
 import org.example.knockin.global.auth.util.PrincipalMemberResolver;
 import org.example.knockin.chat.service.impl.ChatServiceImpl;
 import org.springframework.http.HttpStatus;

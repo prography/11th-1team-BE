@@ -8,7 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.example.knockin.member.entity.Member;
-import org.example.knockin.dto.PrincipalDetails;
+import org.example.knockin.global.auth.dto.PrincipalDetails;
 import org.example.knockin.global.exception.AuthErrorCode;
 import org.example.knockin.global.exception.AuthException;
 import org.example.knockin.member.service.impl.MemberServiceImpl;

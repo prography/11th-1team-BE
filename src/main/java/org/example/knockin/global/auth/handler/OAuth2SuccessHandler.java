@@ -12,7 +12,7 @@ import org.example.knockin.global.auth.util.CookieUtils;
 import org.example.knockin.member.entity.Member;
 import org.example.knockin.global.api.CommonResponse;
 import org.example.knockin.meta.dto.AuthResponse;
-import org.example.knockin.dto.PrincipalDetails;
+import org.example.knockin.global.auth.dto.PrincipalDetails;
 import org.example.knockin.global.exception.AuthErrorCode;
 import org.example.knockin.global.auth.util.TokenConstants;
 import org.example.knockin.global.auth.util.TokenProvider;

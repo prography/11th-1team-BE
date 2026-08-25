@@ -2,9 +2,12 @@ package org.example.knockin.service.impl;
  
 import org.example.knockin.agreement.service.MemberAgreementServiceImpl;
 import org.example.knockin.board.dto.MyBoardListDto;
-import org.example.knockin.dto.*;
 import org.example.knockin.agreement.entity.AgreementLog;
 import org.example.knockin.agreement.entity.MemberAgreement;
+import org.example.knockin.member.dto.ModifyProfileBasicDto;
+import org.example.knockin.member.dto.ProfileVisibilityDto;
+import org.example.knockin.member.dto.SaveProfileAllDto;
+import org.example.knockin.member.dto.SaveProfileBasicDto;
 import org.example.knockin.member.entity.BasicInformation;
 import org.example.knockin.member.entity.Member;
 import org.example.knockin.member.entity.MemberPrivacy;

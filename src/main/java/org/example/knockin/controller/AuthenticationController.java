@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.knockin.authentication.dto.EmailConfirmDto;
 import org.example.knockin.authentication.dto.EmailSendDto;
 import org.example.knockin.global.api.CommonResponse;
-import org.example.knockin.dto.PrincipalDetails;
+import org.example.knockin.global.auth.dto.PrincipalDetails;
 import org.example.knockin.authentication.service.impl.AuthenticationServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

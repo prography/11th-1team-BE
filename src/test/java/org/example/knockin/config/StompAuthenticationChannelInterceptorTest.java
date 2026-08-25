@@ -13,7 +13,7 @@ import java.util.Optional;
 import org.example.knockin.authentication.entity.LoginProviderType;
 import org.example.knockin.member.entity.Member;
 import org.example.knockin.member.entity.MemberRole;
-import org.example.knockin.dto.PrincipalDetails;
+import org.example.knockin.global.auth.dto.PrincipalDetails;
 import org.example.knockin.global.auth.util.PrincipalMemberResolver;
 import org.example.knockin.global.auth.util.TokenProvider;
 import org.example.knockin.global.config.StompAuthenticationChannelInterceptor;

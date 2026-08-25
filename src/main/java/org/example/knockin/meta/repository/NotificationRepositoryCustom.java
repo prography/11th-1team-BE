@@ -1,9 +1,9 @@
 package org.example.knockin.meta.repository;
 
-import org.example.knockin.dto.BoNoticeDetailDto;
-import org.example.knockin.dto.BoNoticeListDto;
-import org.example.knockin.dto.NoticeDetailDto;
-import org.example.knockin.dto.NoticeListDto;
+import org.example.knockin.meta.dto.BoNoticeDetailDto;
+import org.example.knockin.meta.dto.BoNoticeListDto;
+import org.example.knockin.meta.dto.NoticeDetailDto;
+import org.example.knockin.meta.dto.NoticeListDto;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
