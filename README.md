@@ -64,6 +64,51 @@
 
 ---
 
+## 🏛️ System Architecture
+
+KnockIn 백엔드 시스템은 **AWS EC2 상의 Spring Boot 애플리케이션**을 중심으로, **Supabase(PostgreSQL)** 와 **Cloudflare R2** 를 데이터 및 파일 저장소로 활용하며 실시간 통신과 푸시 알림 등을 위한 다양한 외부 API와 연동되어 있습니다.
+
+![](docs/images/knockin-backend-architecture.svg)
+
+<details>
+<summary><b>⚙️ 시스템 구성 요소 다이어그램 (Mermaid) 펼쳐보기</b></summary>
+
+```mermaid
+flowchart LR
+    %% Clients
+    CLIENT["📱 Client (Mobile)"]
+
+    %% Application Server
+    subgraph AWS_EC2 ["☁️ AWS EC2 (Application Server)"]
+        SPRING_BOOT["🍃 Spring Boot API\n(REST, WebSocket, SSE)"]
+    end
+
+    %% Core Data & Storage
+    subgraph DATA_STORAGE ["🗄️ Data & Storage"]
+        DB[("🐘 Supabase\n(PostgreSQL)")]
+        STORAGE["☁️ Cloudflare R2\n(S3 호환 Storage)"]
+    end
+
+    %% External Services
+    subgraph EXTERNAL ["🌐 3rd Party APIs"]
+        FCM["🔔 Firebase (FCM)\n(Push Notification)"]
+        OAUTH["🔑 Kakao / Apple\n(OAuth2 Login)"]
+        EMAIL["📧 Resend API\n(Email Auth)"]
+    end
+
+    %% Connections
+    CLIENT <-->|"HTTPS / STOMP / SSE"| SPRING_BOOT
+    
+    SPRING_BOOT <-->|"Spring Data JPA"| DB
+    SPRING_BOOT <-->|"AWS S3 SDK"| STORAGE
+    SPRING_BOOT -->|"FCM SDK"| FCM
+    SPRING_BOOT -->|"Email Send"| EMAIL
+    SPRING_BOOT <-->|"OAuth2 Token"| OAUTH
+```
+</details>
+
+---
+
 ## 📊 Entity Relationship Diagram (ERD)
 
 KnockIn 프로젝트의 **총 75개 JPA 엔티티**는 기능 단위별로 9개 도메인 블록으로 구성되어 있습니다.
