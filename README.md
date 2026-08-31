@@ -260,10 +260,10 @@ src/main/java/org/example/knockin
 ## 🚀 Local Setup & Run (로컬 실행 가이드)
 
 ### 1. 🔑 SSL/HTTPS 로컬 Keystore 발급 (선택)
-로컬 환경에서 HTTPS 및 OAuth2 소셜 로그인 검증을 수행하려면 루트의 `key.pem`과 `cert.pem`을 PKCS12 Keystore 파일로 변환합니다:
+로컬 환경에서 HTTPS 및 OAuth2 소셜 로그인 검증을 수행하려면 `ssl/` 디렉터리의 `key.pem`과 `cert.pem`을 PKCS12 Keystore 파일로 변환합니다:
 
 ```bash
-openssl pkcs12 -export -out keystore.p12 -inkey key.pem -in cert.pem -name springboot
+openssl pkcs12 -export -out keystore.p12 -inkey ssl/key.pem -in ssl/cert.pem -name springboot
 ```
 
 > **Note**: 생성된 `keystore.p12` 파일은 `src/main/resources/` 경로로 이동시키거나 설정 파일에서 경로를 지정합니다.
