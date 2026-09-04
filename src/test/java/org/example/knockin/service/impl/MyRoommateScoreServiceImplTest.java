@@ -6,9 +6,10 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
-import org.example.knockin.entity.chat.ChattingScore;
-import org.example.knockin.entity.room.RoommateScore;
-import org.example.knockin.repository.room.RoommateScoreRepository;
+import org.example.knockin.chat.entity.ChattingScore;
+import org.example.knockin.mate.entity.RoommateScore;
+import org.example.knockin.mate.repository.RoommateScoreRepository;
+import org.example.knockin.mate.service.impl.MyRoommateScoreServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

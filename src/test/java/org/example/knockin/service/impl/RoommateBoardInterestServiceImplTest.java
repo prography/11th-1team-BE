@@ -7,10 +7,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
-import org.example.knockin.entity.board.RoommateBoard;
-import org.example.knockin.entity.board.RoommateBoardInterest;
-import org.example.knockin.entity.member.Member;
-import org.example.knockin.repository.board.RoommateBoardInterestRepository;
+import org.example.knockin.board.entity.RoommateBoard;
+import org.example.knockin.board.entity.RoommateBoardInterest;
+import org.example.knockin.board.service.impl.RoommateBoardInterestServiceImpl;
+import org.example.knockin.member.entity.Member;
+import org.example.knockin.board.repository.RoommateBoardInterestRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

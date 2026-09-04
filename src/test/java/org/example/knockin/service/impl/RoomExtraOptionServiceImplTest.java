@@ -1,8 +1,9 @@
 package org.example.knockin.service.impl;
  
-import org.example.knockin.dto.MetaRoomAddOptionsDto;
-import org.example.knockin.entity.room.RoomExtraOption;
-import org.example.knockin.repository.room.RoomExtraOptionRepository;
+import org.example.knockin.room.dto.MetaRoomAddOptionsDto;
+import org.example.knockin.room.entity.RoomExtraOption;
+import org.example.knockin.room.repository.RoomExtraOptionRepository;
+import org.example.knockin.room.service.impl.RoomExtraOptionServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

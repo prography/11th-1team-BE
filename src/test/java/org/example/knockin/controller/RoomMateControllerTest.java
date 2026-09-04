@@ -5,11 +5,12 @@ import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.example.knockin.dto.BoardListDto;
-import org.example.knockin.dto.PrincipalDetails;
-import org.example.knockin.entity.member.Member;
-import org.example.knockin.service.RoommateBoardService;
-import org.example.knockin.service.RoommateMatchingService;
+import org.example.knockin.board.controller.RoomMateController;
+import org.example.knockin.board.dto.BoardListDto;
+import org.example.knockin.global.auth.dto.PrincipalDetails;
+import org.example.knockin.member.entity.Member;
+import org.example.knockin.board.service.RoommateBoardService;
+import org.example.knockin.mate.service.RoommateMatchingService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,10 +1,11 @@
 package org.example.knockin.service.impl;
  
-import org.example.knockin.entity.member.Member;
-import org.example.knockin.entity.room.RoomOfferProfile;
-import org.example.knockin.entity.room.RoomProfile;
-import org.example.knockin.entity.room.RoomSeekerProfile;
-import org.example.knockin.repository.room.RoomProfileRepository;
+import org.example.knockin.member.entity.Member;
+import org.example.knockin.room.entity.RoomOfferProfile;
+import org.example.knockin.room.entity.RoomProfile;
+import org.example.knockin.room.entity.RoomSeekerProfile;
+import org.example.knockin.room.repository.RoomProfileRepository;
+import org.example.knockin.room.service.impl.RoomProfileServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

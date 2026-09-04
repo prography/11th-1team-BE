@@ -1,10 +1,22 @@
 package org.example.knockin.service.impl;
  
-import org.example.knockin.dto.*;
-import org.example.knockin.entity.agreement.Agreement;
-import org.example.knockin.entity.room.Region;
-import org.example.knockin.entity.room.RoomExtraOption;
-import org.example.knockin.entity.room.RoomType;
+import org.example.knockin.agreement.dto.TermsDetailDto;
+import org.example.knockin.agreement.dto.TermsListDto;
+import org.example.knockin.agreement.service.impl.AgreementServiceImpl;
+import org.example.knockin.agreement.entity.Agreement;
+import org.example.knockin.mate.service.impl.MetaServiceImpl;
+import org.example.knockin.meta.dto.MetaRegionsDto;
+import org.example.knockin.meta.dto.PopularSearchDto;
+import org.example.knockin.meta.entity.Region;
+import org.example.knockin.meta.service.impl.RegionServiceImpl;
+import org.example.knockin.meta.service.impl.SearchServiceImpl;
+import org.example.knockin.room.dto.MetaRoomAddOptionsDto;
+import org.example.knockin.room.dto.MetaRoomTypesDto;
+import org.example.knockin.room.entity.RoomType;
+import org.example.knockin.life.service.impl.LifeStyleServiceImpl;
+import org.example.knockin.life.dto.MetaLifestylePatternsDto;
+import org.example.knockin.room.service.impl.RoomExtraOptionServiceImpl;
+import org.example.knockin.room.service.impl.RoomTypeServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,9 +1,10 @@
 package org.example.knockin.service.impl;
  
-import org.example.knockin.dto.PopularSearchDto;
-import org.example.knockin.entity.member.Member;
-import org.example.knockin.entity.member.Search;
-import org.example.knockin.repository.member.SearchRepository;
+import org.example.knockin.meta.dto.PopularSearchDto;
+import org.example.knockin.member.entity.Member;
+import org.example.knockin.meta.entity.Search;
+import org.example.knockin.meta.repository.SearchRepository;
+import org.example.knockin.meta.service.impl.SearchServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

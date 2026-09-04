@@ -1,12 +1,13 @@
 package org.example.knockin.service.impl;
  
-import org.example.knockin.entity.member.BasicInformation;
-import org.example.knockin.entity.member.Gender;
-import org.example.knockin.entity.member.Member;
-import org.example.knockin.exception.BusinessException;
-import org.example.knockin.exception.MemberErrorCode;
-import org.example.knockin.repository.member.BasicInformationRepository;
-import org.example.knockin.repository.member.row.ChattingRoomBasicInfoRow;
+import org.example.knockin.member.entity.BasicInformation;
+import org.example.knockin.member.entity.Gender;
+import org.example.knockin.member.entity.Member;
+import org.example.knockin.global.exception.BusinessException;
+import org.example.knockin.global.exception.MemberErrorCode;
+import org.example.knockin.member.repository.BasicInformationRepository;
+import org.example.knockin.member.repository.row.ChattingRoomBasicInfoRow;
+import org.example.knockin.member.service.impl.BasicInformationServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

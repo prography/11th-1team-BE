@@ -1,13 +1,15 @@
 package org.example.knockin.service.impl;
 
-import org.example.knockin.dto.AlarmSettingDto;
-import org.example.knockin.dto.MyNotificationSettingsDto;
-import org.example.knockin.entity.alarm.AlarmSetting;
-import org.example.knockin.entity.alarm.AlarmSettingType;
-import org.example.knockin.entity.member.Member;
-import org.example.knockin.exception.AuthErrorCode;
-import org.example.knockin.exception.BusinessException;
-import org.example.knockin.repository.alarm.AlarmSettingRepository;
+import org.example.knockin.meta.dto.AlarmSettingDto;
+import org.example.knockin.meta.dto.MyNotificationSettingsDto;
+import org.example.knockin.meta.entity.AlarmSetting;
+import org.example.knockin.meta.entity.AlarmSettingType;
+import org.example.knockin.meta.service.impl.NotificationSettingServiceImpl;
+import org.example.knockin.member.entity.Member;
+import org.example.knockin.global.exception.AuthErrorCode;
+import org.example.knockin.global.exception.BusinessException;
+import org.example.knockin.meta.repository.AlarmSettingRepository;
+import org.example.knockin.member.service.impl.MemberServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

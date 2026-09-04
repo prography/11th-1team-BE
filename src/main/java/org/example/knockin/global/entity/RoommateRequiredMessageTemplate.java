@@ -1,7 +1,7 @@
 package org.example.knockin.global.entity;
 
 import lombok.RequiredArgsConstructor;
-import org.example.knockin.entity.room.RoommateRequiredStatus;
+import org.example.knockin.mate.entity.RoommateRequiredStatus;
 
 @RequiredArgsConstructor
 public enum RoommateRequiredMessageTemplate implements AlarmMessageTemplate {

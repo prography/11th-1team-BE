@@ -4,11 +4,11 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
-import org.example.knockin.entity.alarm.AlarmSettingType;
-import org.example.knockin.entity.member.Member;
-import org.example.knockin.repository.alarm.AlarmSettingRepository;
-import org.example.knockin.service.impl.FcmServiceImpl;
-import org.example.knockin.service.impl.PushNotificationServiceImpl;
+import org.example.knockin.meta.entity.AlarmSettingType;
+import org.example.knockin.member.entity.Member;
+import org.example.knockin.meta.repository.AlarmSettingRepository;
+import org.example.knockin.meta.service.impl.FcmServiceImpl;
+import org.example.knockin.meta.service.impl.PushNotificationServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

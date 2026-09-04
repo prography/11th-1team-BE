@@ -1,14 +1,15 @@
 package org.example.knockin.service.impl;
 
-import org.example.knockin.dto.AuthEmailDeleteDto;
-import org.example.knockin.dto.AuthEmailListDto;
-import org.example.knockin.dto.AuthEmailModifyDto;
-import org.example.knockin.dto.AuthEmailSaveDto;
-import org.example.knockin.entity.auth.AuthenticationType;
-import org.example.knockin.entity.utils.AuthEmail;
-import org.example.knockin.exception.AuthEmailErrorCode;
-import org.example.knockin.exception.BusinessException;
-import org.example.knockin.repository.utils.AuthEmailRepository;
+import org.example.knockin.meta.dto.AuthEmailDeleteDto;
+import org.example.knockin.meta.dto.AuthEmailListDto;
+import org.example.knockin.meta.dto.AuthEmailModifyDto;
+import org.example.knockin.meta.dto.AuthEmailSaveDto;
+import org.example.knockin.verification.entity.AuthenticationType;
+import org.example.knockin.meta.entity.AuthEmail;
+import org.example.knockin.global.exception.AuthEmailErrorCode;
+import org.example.knockin.global.exception.BusinessException;
+import org.example.knockin.meta.service.impl.AuthEmailServiceImpl;
+import org.example.knockin.meta.repository.AuthEmailRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

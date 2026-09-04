@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -20,59 +19,76 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.StreamSupport;
-import org.example.knockin.config.RoommateBoardPolicy;
-import org.example.knockin.dto.*;
-import org.example.knockin.dto.BoardDetailDto.Response.RoomExtraOptionInfo;
-import org.example.knockin.dto.BoardDto.Request.FileDto;
-import org.example.knockin.dto.BoardModifyDto.Request.ExistingFileDto;
-import org.example.knockin.dto.BoardModifyDto.Request.NewFileDto;
-import org.example.knockin.dto.Compatibility;
-import org.example.knockin.dto.ReportDto;
-import org.example.knockin.entity.auth.AuthenticationType;
-import org.example.knockin.entity.board.RoommateBoard;
-import org.example.knockin.entity.board.RoommateBoardBadgeType;
-import org.example.knockin.entity.board.RoommateBoardDeclaration;
-import org.example.knockin.entity.board.RoommateBoardFile;
-import org.example.knockin.entity.board.RoommateBoardInterest;
-import org.example.knockin.entity.board.RoommateBoardOption;
-import org.example.knockin.entity.file.File;
-import org.example.knockin.entity.file.FileType;
-import org.example.knockin.entity.life.LifePatternType;
-import org.example.knockin.entity.member.Gender;
+import org.example.knockin.board.dto.BoBoardDetailDto;
+import org.example.knockin.board.dto.BoBoardListDto;
+import org.example.knockin.mate.service.impl.MetaServiceImpl;
+import org.example.knockin.meta.service.impl.AlarmServiceImpl;
+import org.example.knockin.meta.service.impl.PushNotificationServiceImpl;
+import org.example.knockin.verification.service.impl.AuthenticationServiceImpl;
+import org.example.knockin.board.dto.BoardDetailDto;
+import org.example.knockin.board.dto.BoardDto;
+import org.example.knockin.board.dto.BoardEditDto;
+import org.example.knockin.board.dto.BoardListDto;
+import org.example.knockin.board.dto.BoardModifyDto;
+import org.example.knockin.board.service.impl.RoommateBoardFileServiceImpl;
+import org.example.knockin.board.service.impl.RoommateBoardInterestServiceImpl;
+import org.example.knockin.board.service.impl.RoommateBoardOptionServiceImpl;
+import org.example.knockin.board.service.impl.RoommateBoardServiceImpl;
+import org.example.knockin.global.config.RoommateBoardPolicy;
+import org.example.knockin.board.dto.BoardDetailDto.Response.RoomExtraOptionInfo;
+import org.example.knockin.board.dto.BoardDto.Request.FileDto;
+import org.example.knockin.board.dto.BoardModifyDto.Request.ExistingFileDto;
+import org.example.knockin.board.dto.BoardModifyDto.Request.NewFileDto;
+import org.example.knockin.util.dto.Compatibility;
+import org.example.knockin.declaration.dto.ReportDto;
+import org.example.knockin.verification.entity.AuthenticationType;
+import org.example.knockin.board.entity.RoommateBoard;
+import org.example.knockin.board.entity.RoommateBoardBadgeType;
+import org.example.knockin.declaration.entity.RoommateBoardDeclaration;
+import org.example.knockin.board.entity.RoommateBoardFile;
+import org.example.knockin.board.entity.RoommateBoardInterest;
+import org.example.knockin.board.entity.RoommateBoardOption;
+import org.example.knockin.member.service.impl.MemberServiceImpl;
+import org.example.knockin.meta.entity.File;
+import org.example.knockin.meta.entity.FileType;
+import org.example.knockin.life.service.impl.MemberLifePatternService;
+import org.example.knockin.life.service.impl.PreferenceConditionServiceImpl;
+import org.example.knockin.life.entity.LifePatternType;
+import org.example.knockin.member.entity.Gender;
 import org.example.knockin.global.util.DateUtils;
-import org.example.knockin.entity.member.Member;
-import org.example.knockin.entity.room.Region;
-import org.example.knockin.entity.room.RoomExtraOption;
-import org.example.knockin.entity.room.RoomType;
-import org.example.knockin.exception.BusinessException;
-import org.example.knockin.exception.CommonErrorCode;
-import org.example.knockin.exception.FileErrorCode;
-import org.example.knockin.exception.MemberErrorCode;
-import org.example.knockin.exception.MetaErrorCode;
-import org.example.knockin.exception.RoommateBoardErrorCode;
-import org.example.knockin.exception.RoomTypeErrorCode;
-import org.example.knockin.repository.auth.AuthenticationRepository;
-import org.example.knockin.repository.auth.row.MemberAuthenticationRow;
-import org.example.knockin.repository.board.RoommateBoardDeclarationRepository;
-import org.example.knockin.repository.board.RoommateBoardFileRepository;
-import org.example.knockin.repository.board.RoommateBoardInterestRepository;
-import org.example.knockin.repository.board.RoommateBoardOptionRepository;
-import org.example.knockin.repository.board.RoommateBoardRepository;
-import org.example.knockin.repository.board.row.BasicInfoRow;
-import org.example.knockin.repository.board.row.BoardBaseRow;
-import org.example.knockin.repository.board.row.BoardThumbnailRow;
-import org.example.knockin.repository.board.row.EditFormRow;
-import org.example.knockin.repository.file.FileRepository;
-import org.example.knockin.repository.life.MemberLifePatternRepository;
-import org.example.knockin.repository.life.PreferenceConditionRepository;
-import org.example.knockin.repository.life.PreferenceConditionWeightRepository;
-import org.example.knockin.repository.life.row.MatchingLifestyleRow;
-import org.example.knockin.repository.life.row.MatchingPreferenceConditionRow;
-import org.example.knockin.repository.life.row.MatchingPreferenceConditionWeightRow;
-import org.example.knockin.repository.board.row.BoardInterestCountRow;
-import org.example.knockin.service.FileService;
-import org.example.knockin.service.RoommateScoreService;
-import org.junit.jupiter.api.BeforeEach;
+import org.example.knockin.member.entity.Member;
+import org.example.knockin.meta.entity.Region;
+import org.example.knockin.meta.service.impl.SearchServiceImpl;
+import org.example.knockin.room.entity.RoomExtraOption;
+import org.example.knockin.room.entity.RoomType;
+import org.example.knockin.global.exception.BusinessException;
+import org.example.knockin.global.exception.CommonErrorCode;
+import org.example.knockin.global.exception.FileErrorCode;
+import org.example.knockin.global.exception.MemberErrorCode;
+import org.example.knockin.global.exception.MetaErrorCode;
+import org.example.knockin.global.exception.RoommateBoardErrorCode;
+import org.example.knockin.global.exception.RoomTypeErrorCode;
+import org.example.knockin.verification.repository.AuthenticationRepository;
+import org.example.knockin.verification.repository.row.MemberAuthenticationRow;
+import org.example.knockin.declaration.repository.RoommateBoardDeclarationRepository;
+import org.example.knockin.board.repository.RoommateBoardFileRepository;
+import org.example.knockin.board.repository.RoommateBoardInterestRepository;
+import org.example.knockin.board.repository.RoommateBoardOptionRepository;
+import org.example.knockin.board.repository.RoommateBoardRepository;
+import org.example.knockin.board.repository.row.BasicInfoRow;
+import org.example.knockin.board.repository.row.BoardBaseRow;
+import org.example.knockin.board.repository.row.BoardThumbnailRow;
+import org.example.knockin.board.repository.row.EditFormRow;
+import org.example.knockin.meta.repository.FileRepository;
+import org.example.knockin.life.repository.MemberLifePatternRepository;
+import org.example.knockin.life.repository.PreferenceConditionRepository;
+import org.example.knockin.life.repository.PreferenceConditionWeightRepository;
+import org.example.knockin.life.repository.row.MatchingLifestyleRow;
+import org.example.knockin.life.repository.row.MatchingPreferenceConditionRow;
+import org.example.knockin.life.repository.row.MatchingPreferenceConditionWeightRow;
+import org.example.knockin.board.repository.row.BoardInterestCountRow;
+import org.example.knockin.meta.service.FileService;
+import org.example.knockin.util.service.RoommateScoreService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -82,7 +98,6 @@ import org.mockito.InjectMocks;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -158,9 +173,6 @@ class RoommateBoardServiceImplTest {
     private RoommateBoardInterestServiceImpl roommateBoardInterestService;
 
     @Mock
-    private RoommateBoardDeclarationServiceImpl roommateBoardDeclarationService;
-
-    @Mock
     private RoommateBoardPolicy roommateBoardPolicy;
 
     @Mock
@@ -201,139 +213,6 @@ class RoommateBoardServiceImplTest {
 
     @Captor
     private ArgumentCaptor<RoommateBoardDeclaration> roommateBoardDeclarationCaptor;
-
-    @BeforeEach
-    void setUpDependencies() throws IOException {
-        lenient().when(roommateBoardPolicy.getComeableDateVisibleGraceDays()).thenReturn(7);
-        lenient().when(roommateBoardPolicy.getImageMaxCount()).thenReturn(10);
-        lenient().when(roommateBoardPolicy.getThumbnailImageMaxCount()).thenReturn(1);
-        lenient().when(roommateBoardPolicy.getHotBadgeMinInterestCount()).thenReturn(10);
-        lenient().when(transactionTemplate.execute(any())).thenAnswer(invocation -> {
-            TransactionCallback<?> callback = invocation.getArgument(0);
-            return callback.doInTransaction(null);
-        });
-        lenient().when(roommateBoardRepository.save(any(RoommateBoard.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0));
-        lenient().when(fileRepository.save(any(File.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        lenient().when(fileService.save(any(MultipartFile.class), any(FileType.class))).thenAnswer(invocation -> {
-            MultipartFile multipartFile = invocation.getArgument(0);
-            FileType fileType = invocation.getArgument(1);
-            File uploadedFile = fileService.upload(multipartFile, fileType);
-            return fileRepository.save(uploadedFile);
-        });
-        lenient().when(roommateBoardFileService.saveAll(any(RoommateBoard.class), any(), any())).thenAnswer(invocation -> {
-            RoommateBoard roommateBoard = invocation.getArgument(0);
-            List<MultipartFile> multipartFiles = invocation.getArgument(1);
-            List<Boolean> thumbnails = invocation.getArgument(2);
-            List<RoommateBoardFile> savedBoardFiles = new ArrayList<>();
-            for (int i = 0; i < multipartFiles.size(); i++) {
-                File savedFile = fileService.save(multipartFiles.get(i), FileType.ROOMMATE_BOARD_IMAGE);
-                RoommateBoardFile roommateBoardFile = RoommateBoardFile.builder()
-                        .roommateBoard(roommateBoard)
-                        .file(savedFile)
-                        .isThumbnail(thumbnails.get(i))
-                        .build();
-                roommateBoardFileRepository.save(roommateBoardFile);
-                savedBoardFiles.add(roommateBoardFile);
-            }
-            return savedBoardFiles;
-        });
-        lenient().when(roommateBoardFileService.findFileDetailDtoByBoardId(any()))
-                .thenAnswer(invocation -> roommateBoardFileRepository.getFileDetailDtoByBoardId(invocation.getArgument(0)));
-        lenient().when(roommateBoardFileService.findAllByRoommateBoard(any(RoommateBoard.class)))
-                .thenAnswer(invocation -> roommateBoardFileRepository.findByRoommateBoard(invocation.getArgument(0)));
-        lenient().doAnswer(invocation -> {
-            RoommateBoardFile roommateBoardFile = invocation.getArgument(0);
-            roommateBoardFile.getFile().softDelete();
-            roommateBoardFileRepository.delete(roommateBoardFile);
-            return null;
-        }).when(roommateBoardFileService).softDelete(any(RoommateBoardFile.class));
-        lenient().when(memberLifePatternService.findMatchingRowByMemberIdsIn(any()))
-                .thenAnswer(invocation -> memberLifePatternRepository.findAllLifestyleByMemberIdIn(invocation.getArgument(0)));
-        lenient().when(memberLifePatternService.findLifeStyleDtoByMemberId(any()))
-                .thenAnswer(invocation -> memberLifePatternRepository.getLifeStyleDto(invocation.getArgument(0)));
-        lenient().when(preferenceConditionService.findRowByMemberIdsIn(any()))
-                .thenAnswer(invocation -> preferenceConditionRepository.findAllPreferenceConditionByMemberIdIn(invocation.getArgument(0)));
-        lenient().when(preferenceConditionService.findAllConditionByMemberId(any()))
-                .thenAnswer(invocation -> preferenceConditionRepository.getConditionDtoByMemberId(invocation.getArgument(0)));
-        lenient().when(preferenceConditionService.findWeightRowByMemberIdsIn(any()))
-                .thenAnswer(invocation -> preferenceConditionWeightRepository.findAllPreferenceConditionWeightByMemberIdIn(invocation.getArgument(0)));
-        lenient().when(preferenceConditionService.findAllConditionWeightByMemberId(any()))
-                .thenAnswer(invocation -> preferenceConditionWeightRepository.getConditionWeightDtoByMemberId(invocation.getArgument(0)));
-        lenient().when(authenticationService.findTypesByMemberId(any()))
-                .thenAnswer(invocation -> authenticationRepository.getAcceptedAuthenticationTypeByMemberId(invocation.getArgument(0)));
-        lenient().when(roommateBoardOptionService.findExtraOptionsByBoardId(any()))
-                .thenAnswer(invocation -> roommateBoardOptionRepository.getExtraOptionsByBoardId(invocation.getArgument(0)));
-        lenient().when(roommateBoardOptionService.findWithRoomExtraOptionByBoardId(any()))
-                .thenAnswer(invocation -> roommateBoardOptionRepository.findWithRoomExtraOptionByBoardId(invocation.getArgument(0)));
-        lenient().when(roommateBoardOptionService.saveByExtraOptionsIds(any(RoommateBoard.class), any())).thenAnswer(invocation -> {
-            RoommateBoard roommateBoard = invocation.getArgument(0);
-            List<Long> extraOptionIds = invocation.getArgument(1);
-            if (extraOptionIds == null || extraOptionIds.isEmpty()) {
-                return List.of();
-            }
-
-            List<Long> uniqueIds = extraOptionIds.stream().distinct().toList();
-            List<RoomExtraOption> roomExtraOptions = metaService.findRoomExtraOptionsByIdIn(uniqueIds);
-            if (uniqueIds.size() != roomExtraOptions.size()) {
-                throw new BusinessException(MetaErrorCode.EXTRA_OPTION_NOT_FOUND);
-            }
-
-            List<RoommateBoardOption> options = roomExtraOptions.stream()
-                    .map(extraOption -> RoommateBoardOption.builder()
-                            .roommateBoard(roommateBoard)
-                            .roomExtraOption(extraOption)
-                            .build())
-                    .toList();
-            return roommateBoardOptionRepository.saveAll(options);
-        });
-        lenient().doAnswer(invocation -> {
-            List<RoommateBoardOption> roommateBoardOptions = invocation.getArgument(0);
-            List<Long> extraOptionIds = invocation.getArgument(1);
-            if (extraOptionIds == null || extraOptionIds.isEmpty()) {
-                return null;
-            }
-
-            List<RoommateBoardOption> deleteTargets = roommateBoardOptions.stream()
-                    .filter(option -> extraOptionIds.contains(option.getRoomExtraOption().getId()))
-                    .toList();
-            roommateBoardOptionRepository.deleteAll(deleteTargets);
-            return null;
-        }).when(roommateBoardOptionService).deleteByExtraOptionIds(any(), any());
-        lenient().when(roommateBoardInterestService.existsActiveByBoardIdAndMemberId(any(), any()))
-                .thenAnswer(invocation -> roommateBoardInterestRepository.existsByRoommateBoardIdAndMemberIdAndIsDeletedIsFalse(
-                        invocation.getArgument(0), invocation.getArgument(1)));
-        lenient().doAnswer(invocation -> {
-            Member member = invocation.getArgument(0);
-            RoommateBoard roommateBoard = invocation.getArgument(1);
-            roommateBoardInterestRepository.findByRoommateBoardAndMember(roommateBoard, member)
-                    .ifPresentOrElse(
-                            RoommateBoardInterest::likeToggle,
-                            () -> roommateBoardInterestRepository.save(RoommateBoardInterest.builder()
-                                    .member(member)
-                                    .roommateBoard(roommateBoard)
-                                    .isDeleted(false)
-                                    .build())
-                    );
-            return null;
-        }).when(roommateBoardInterestService).toggle(any(Member.class), any(RoommateBoard.class));
-        lenient().doAnswer(invocation -> {
-            RoommateBoard roommateBoard = invocation.getArgument(0);
-            Member member = invocation.getArgument(1);
-            String reason = invocation.getArgument(2);
-            roommateBoardDeclarationRepository.findByRoommateBoardAndMember(roommateBoard, member)
-                    .ifPresent(declaration -> {
-                        throw new BusinessException(RoommateBoardErrorCode.ROOMMATE_BOARD_DECLARATION_DUPLICATE);
-                    });
-            roommateBoardDeclarationRepository.save(RoommateBoardDeclaration.builder()
-                    .member(member)
-                    .roommateBoard(roommateBoard)
-                    .reason(reason)
-                    .declarationType(org.example.knockin.global.entity.DeclarationType.PENDING)
-                    .build());
-            return null;
-        }).when(roommateBoardDeclarationService).report(any(RoommateBoard.class), any(Member.class), any());
-    }
 
     @Test
     @DisplayName("좋아요 이력이 없으면 관심 게시글을 새로 저장한다")

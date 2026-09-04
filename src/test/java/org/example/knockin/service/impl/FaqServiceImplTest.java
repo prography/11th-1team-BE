@@ -1,12 +1,19 @@
 package org.example.knockin.service.impl;
 
-import org.example.knockin.dto.*;
-import org.example.knockin.entity.board.Faq;
-import org.example.knockin.entity.member.Member;
-import org.example.knockin.exception.AuthErrorCode;
-import org.example.knockin.exception.BusinessException;
-import org.example.knockin.exception.FaqErrorCode;
-import org.example.knockin.repository.board.FaqRepository;
+import org.example.knockin.member.service.impl.MemberServiceImpl;
+import org.example.knockin.meta.dto.FaqAllListDto;
+import org.example.knockin.meta.dto.FaqDeleteDto;
+import org.example.knockin.meta.dto.FaqDto;
+import org.example.knockin.meta.dto.FaqListDto;
+import org.example.knockin.meta.dto.FaqModifyDto;
+import org.example.knockin.meta.dto.FaqSaveDto;
+import org.example.knockin.meta.entity.Faq;
+import org.example.knockin.member.entity.Member;
+import org.example.knockin.global.exception.AuthErrorCode;
+import org.example.knockin.global.exception.BusinessException;
+import org.example.knockin.global.exception.FaqErrorCode;
+import org.example.knockin.meta.service.impl.FaqServiceImpl;
+import org.example.knockin.meta.repository.FaqRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,13 +1,14 @@
 package org.example.knockin.service.impl;
  
-import org.example.knockin.dto.BoardDetailDto.Response.Lifestyle;
-import org.example.knockin.entity.life.LifePatternType;
-import org.example.knockin.entity.life.MemberLifePattern;
-import org.example.knockin.entity.life.MemberLifePatternLog;
-import org.example.knockin.entity.member.Member;
-import org.example.knockin.repository.life.MemberLifePatternLogRepository;
-import org.example.knockin.repository.life.MemberLifePatternRepository;
-import org.example.knockin.repository.life.row.MatchingLifestyleRow;
+import org.example.knockin.board.dto.BoardDetailDto.Response.Lifestyle;
+import org.example.knockin.life.service.impl.MemberLifePatternService;
+import org.example.knockin.life.entity.LifePatternType;
+import org.example.knockin.life.entity.MemberLifePattern;
+import org.example.knockin.life.entity.MemberLifePatternLog;
+import org.example.knockin.member.entity.Member;
+import org.example.knockin.life.repository.MemberLifePatternLogRepository;
+import org.example.knockin.life.repository.MemberLifePatternRepository;
+import org.example.knockin.life.repository.row.MatchingLifestyleRow;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

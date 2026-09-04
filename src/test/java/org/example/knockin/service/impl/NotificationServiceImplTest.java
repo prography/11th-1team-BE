@@ -1,10 +1,10 @@
 package org.example.knockin.service.impl;
 
-import org.example.knockin.dto.BoNoticeDetailDto;
-import org.example.knockin.dto.BoNoticeListDto;
-import org.example.knockin.dto.NoticeDetailDto;
-import org.example.knockin.entity.alarm.Notification;
-import org.example.knockin.repository.alarm.NotificationRepository;
+import org.example.knockin.meta.service.impl.NotificationServiceImpl;
+import org.example.knockin.meta.dto.BoNoticeListDto;
+import org.example.knockin.meta.dto.NoticeDetailDto;
+import org.example.knockin.meta.entity.Notification;
+import org.example.knockin.meta.repository.NotificationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
