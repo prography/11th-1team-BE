@@ -42,7 +42,7 @@ import org.example.knockin.verification.repository.row.MemberAuthenticationRow;
 import org.example.knockin.chat.repository.row.ChatRoomListRow;
 import org.example.knockin.chat.repository.row.ChatRoomUnreadCountRow;
 import org.example.knockin.meta.service.FileService;
-import org.example.knockin.matching.service.RoommateScoreService;
+import org.example.knockin.util.service.RoommateScoreService;
 import org.example.knockin.verification.service.impl.AuthenticationServiceImpl;
 import org.example.knockin.member.service.impl.BasicInformationServiceImpl;
 import org.example.knockin.member.service.impl.BlockServiceImpl;

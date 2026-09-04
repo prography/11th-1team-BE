@@ -31,7 +31,7 @@ import org.example.knockin.global.exception.MyRoommateErrorCode;
 import org.example.knockin.global.util.DateUtils;
 import org.example.knockin.member.repository.row.ChattingRoomBasicInfoRow;
 import org.example.knockin.mate.repository.MyRoommateRepository;
-import org.example.knockin.matching.service.RoommateScoreService;
+import org.example.knockin.util.service.RoommateScoreService;
 import org.example.knockin.member.service.impl.BasicInformationServiceImpl;
 import org.example.knockin.member.service.impl.MemberPrivacyServiceImpl;
 import org.springframework.stereotype.Service;

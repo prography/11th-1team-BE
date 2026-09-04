@@ -51,7 +51,7 @@ import org.example.knockin.mate.service.impl.MyRoomMateServiceImpl;
 import org.example.knockin.mate.service.impl.MyRoommateScoreServiceImpl;
 import org.example.knockin.member.service.impl.BasicInformationServiceImpl;
 import org.example.knockin.member.service.impl.MemberPrivacyServiceImpl;
-import org.example.knockin.matching.service.RoommateScoreService;
+import org.example.knockin.util.service.RoommateScoreService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

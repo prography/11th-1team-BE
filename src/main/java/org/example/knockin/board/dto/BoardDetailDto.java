@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.knockin.matching.dto.Compatibility;
+import org.example.knockin.util.dto.Compatibility;
 import org.example.knockin.verification.entity.AuthenticationType;
 import org.example.knockin.board.entity.RoommateBoardBadgeType;
 import org.example.knockin.life.entity.LifePatternType;

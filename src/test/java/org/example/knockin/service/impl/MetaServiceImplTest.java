@@ -4,6 +4,7 @@ import org.example.knockin.agreement.dto.TermsDetailDto;
 import org.example.knockin.agreement.dto.TermsListDto;
 import org.example.knockin.agreement.service.impl.AgreementServiceImpl;
 import org.example.knockin.agreement.entity.Agreement;
+import org.example.knockin.mate.service.impl.MetaServiceImpl;
 import org.example.knockin.meta.dto.MetaRegionsDto;
 import org.example.knockin.meta.dto.PopularSearchDto;
 import org.example.knockin.meta.entity.Region;

@@ -84,7 +84,7 @@ import org.example.knockin.chat.repository.row.ChatRoomUnreadCountRow;
 import org.example.knockin.mate.repository.RoommateMatchingRequiredRepository;
 import org.example.knockin.mate.service.impl.MyRoomMateServiceImpl;
 import org.example.knockin.meta.service.FileService;
-import org.example.knockin.matching.service.RoommateScoreService;
+import org.example.knockin.util.service.RoommateScoreService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

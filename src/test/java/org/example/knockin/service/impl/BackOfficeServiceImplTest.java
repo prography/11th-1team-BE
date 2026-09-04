@@ -17,6 +17,7 @@ import org.example.knockin.meta.dto.BoNoticeDetailDto;
 import org.example.knockin.meta.dto.BoNoticeDto;
 import org.example.knockin.meta.dto.BoNoticeListDto;
 import org.example.knockin.meta.service.impl.NotificationServiceImpl;
+import org.example.knockin.util.service.impl.BackOfficeServiceImpl;
 import org.example.knockin.verification.dto.BoVerificationApproveListDto;
 import org.example.knockin.verification.dto.BoVerificationCancelListDto;
 import org.example.knockin.verification.dto.BoVerificationDto;
