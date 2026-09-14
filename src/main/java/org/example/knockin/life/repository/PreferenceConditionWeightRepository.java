@@ -10,4 +10,6 @@ public interface PreferenceConditionWeightRepository extends JpaRepository<Prefe
     void deleteByMember(Member member);
 
     List<PreferenceConditionWeight> findByMember(Member member);
+
+    List<PreferenceConditionWeight> findAllByMember(Member member);
 }

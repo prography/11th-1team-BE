@@ -49,4 +49,29 @@ public class PreferenceConditionLogRepositoryImpl implements PreferenceCondition
                 .orderBy(lifePattern.sort.asc(), preferenceConditionLog.id.asc())
                 .fetch();
     }
+
+    @Override
+    public List<PreferenceConditionLog> findLatestLogsWithFetchByMemberId(Long memberId) {
+        QPreferenceConditionLog subLog = new QPreferenceConditionLog("subLog");
+        QPreferenceConditionLogDegree subDegree = new QPreferenceConditionLogDegree("subDegree");
+
+        return jpaQueryFactory
+                .selectFrom(preferenceConditionLog)
+                .join(preferenceConditionLog.preferenceConditionLogDegree, preferenceConditionLogDegree).fetchJoin()
+                .join(preferenceConditionLog.lifePatternInformation, lifePatternInformation).fetchJoin()
+                .join(lifePatternInformation.lifePattern, lifePattern).fetchJoin()
+                .where(
+                        preferenceConditionLog.member.id.eq(memberId),
+                        preferenceConditionLogDegree.degree.eq(
+                                JPAExpressions
+                                        .select(subDegree.degree.max())
+                                        .from(subLog)
+                                        .join(subLog.preferenceConditionLogDegree, subDegree)
+                                        .where(subLog.member.id.eq(memberId))
+                        ),
+                        lifePattern.isDeleted.isFalse()
+                )
+                .orderBy(lifePattern.sort.asc())
+                .fetch();
+    }
 }
