@@ -49,6 +49,7 @@ import org.example.knockin.member.service.impl.BlockServiceImpl;
 import org.example.knockin.member.service.impl.MemberServiceImpl;
 import org.example.knockin.mate.service.impl.MyRoomMateServiceImpl;
 import org.example.knockin.mate.service.impl.RoommateMatchingRequiredServiceImpl;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -77,7 +78,7 @@ public class ChatServiceImpl {
     private final RoommateBoardServiceImpl roommateBoardService;
     private final ChattingRequiredServiceImpl chattingRequiredService;
     private final MemberServiceImpl memberService;
-    private final RoommateScoreService roommateScoreService;
+    private final RoommateScoreService javaRoommateScoreV2Service;
     private final ChattingScoreServiceImpl chattingScoreService;
     private final BlockServiceImpl blockService;
     private final PushNotificationServiceImpl pushNotificationService;
@@ -283,7 +284,7 @@ public class ChatServiceImpl {
         Integer score = chattingScoreService
                 .findByChattingRequiredIdAndMemberId(chattingRoom.getChattingRequired().getId(), memberId)
                 .map(ChattingScore::getScore)
-                .orElseGet(() -> roommateScoreService.calculateSimpleScore(memberId, opponentMember.getId()));
+                .orElseGet(() -> javaRoommateScoreV2Service.calculateSimpleScore(memberId, opponentMember.getId()));
 
         return ChatRoomDetailDto.ProfileInfo.builder()
                 .id(row.memberId())
@@ -309,7 +310,7 @@ public class ChatServiceImpl {
         chatRoomMemberService.saveAll(chattingRoom, List.of(requester, requestee));
         String contents = request.getChatMessage().getContents();
         ChatRoomMessage chatRoomMessage = chatRoomMessageService.save(contents, requester, chattingRoom, MessageType.TEXT);
-        chattingScoreService.saveAll(roommateScoreService.createChattingScores(chattingRequired));
+        chattingScoreService.saveAll(javaRoommateScoreV2Service.createChattingScores(chattingRequired));
 
         return ChatRoomCreateDto.Response.builder()
                 .chatRoomId(chattingRoom.getId())

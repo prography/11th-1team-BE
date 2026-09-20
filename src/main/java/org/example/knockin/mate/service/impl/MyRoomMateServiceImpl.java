@@ -41,7 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MyRoomMateServiceImpl {
     private final MyRoommateRepository myRoommateRepository;
-    private final RoommateScoreService roommateScoreService;
+    private final RoommateScoreService javaRoommateScoreV2Service;
     private final MemberPrivacyServiceImpl memberPrivacyService;
     private final BasicInformationServiceImpl basicInformationService;
     private final MyRoommateScoreServiceImpl myRoommateScoreService;
@@ -92,7 +92,7 @@ public class MyRoomMateServiceImpl {
                     ChattingScore chattingScore = roommateScore.getChattingScore();
                     return chattingScore.getScore();
                 })
-                .orElseGet(() -> roommateScoreService.calculateSimpleScore(memberId, opponentId));
+                .orElseGet(() -> javaRoommateScoreV2Service.calculateSimpleScore(memberId, opponentId));
         Long chatRoomId = roommateMatchingRequired.getChattingRoom().getId();
 
         return MyRoommateCardDto.Response.builder()

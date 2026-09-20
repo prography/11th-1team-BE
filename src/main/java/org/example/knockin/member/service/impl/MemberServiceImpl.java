@@ -130,6 +130,10 @@ public class MemberServiceImpl {
                 .orElseThrow(() -> new BusinessException(MemberErrorCode.MEMBER_NOT_FOUND));
     }
 
+    public List<Member> findAllById(List<Long> ids) {
+        return memberRepository.findAllById(ids);
+    }
+
     public List<MemberWithNameRow> findAllWithNameRowById(List<Long> ids) {
         return memberRepository.findAllWithNameRowById(ids);
     }
