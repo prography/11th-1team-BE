@@ -111,7 +111,7 @@ public class JavaRoommateScoreV2Service implements RoommateScoreService {
         int lifePatternMaxSize = Math.max(me.size(), target.size());
         double lifePatternPartPoint = (double) TOTAL_POINT / (lifePatternMaxSize + preferenceConditionWeightList.size());
         List<Compatibility.LifeStyleInfo> lifeStyleInfoList = new ArrayList<>();
-        int totalScore = 0;
+        double totalScore = 0;
 
         for(LifePatternInformation myInfo : me) {
             LifePattern lifePattern = myInfo.getLifePattern();
@@ -122,13 +122,13 @@ public class JavaRoommateScoreV2Service implements RoommateScoreService {
                 Compatibility.LifeStyleInfo lifeStyleInfo = calculateScores(myInfo, targetInfo, lifePattern);
                 lifeStyleInfoList.add(lifeStyleInfo);
                 int preferenceWeight = preferenceConditionWeightList.stream().anyMatch(weight -> weight.getLifePattern().getId() == patternId) ? PREFERENCE_WEIGHT : NON_PREFERENCE_WEIGHT;
-                totalScore += (int) ((lifePatternPartPoint * preferenceWeight) * ((double) lifeStyleInfo.getPercent() / TOTAL_POINT));
+                totalScore += ((lifePatternPartPoint * preferenceWeight) * ((double) lifeStyleInfo.getPercent() / TOTAL_POINT));
             } else {
                 lifeStyleInfoList.add(Compatibility.LifeStyleInfo.builder().id(patternId).name(lifePattern.getName()).percent(0).build());
             }
         }
 
-        return Compatibility.builder().totalScore(totalScore).lifeStyleInfo(lifeStyleInfoList).build();
+        return Compatibility.builder().totalScore((int) totalScore).lifeStyleInfo(lifeStyleInfoList).build();
     }
 
     public Compatibility.LifeStyleInfo calculateScores(LifePatternInformation me, LifePatternInformation target, LifePattern lifePattern) {
