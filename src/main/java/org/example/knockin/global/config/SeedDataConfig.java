@@ -169,6 +169,7 @@ import org.example.knockin.mate.repository.RoommateScoreRepository;
 import org.example.knockin.room.repository.SeekerRoomTypeRepository;
 import org.example.knockin.meta.repository.AppVersionRepository;
 import org.example.knockin.meta.repository.AuthEmailRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -183,6 +184,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Profile("!prod")
 public class SeedDataConfig implements CommandLineRunner {
+    @Value("${seed.load-test.records-per-entity:0}")
+    private int loadTestRecordsPerEntity;
+
     private final AgreementRepository agreementRepository;
     private final AgreementLogRepository agreementLogRepository;
     private final LifePatternRepository lifePatternRepository;
@@ -909,6 +913,517 @@ public class SeedDataConfig implements CommandLineRunner {
                 .variance(VarianceType.INCREASE)
                 .build();
         pointLogRepository.save(pointLog);
+
+        seedLoadTestData(
+                loadTestRecordsPerEntity,
+                level3Towns,
+                List.of(oneRoom, twoRoom, threeRoomPlus, officetel, apartment),
+                fullOption,
+                elevator,
+                user2,
+                adminMember,
+                catAccount,
+                profilePic,
+                boardPic,
+                chatRoomPic
+        );
+    }
+
+    private void seedLoadTestData(
+            int recordCount,
+            List<Region> regions,
+            List<RoomType> roomTypes,
+            RoomExtraOption firstOption,
+            RoomExtraOption secondOption,
+            Member supportMember,
+            Member adminMember,
+            InquiryCategory inquiryCategory,
+            File profileFile,
+            File boardFile,
+            File chatFile
+    ) {
+        if (recordCount <= 0) {
+            return;
+        }
+
+        List<Member> members = new ArrayList<>(recordCount);
+        for (int i = 1; i <= recordCount; i++) {
+            members.add(Member.builder()
+                    .providerType(i % 2 == 0 ? LoginProviderType.KAKAO : LoginProviderType.APPLE)
+                    .providerId("load_test_user_" + i)
+                    .role(MemberRole.USER)
+                    .isDelete(false)
+                    .build());
+        }
+        memberRepository.saveAll(members);
+
+        List<State> states = new ArrayList<>(recordCount);
+        List<BasicInformation> basicInformation = new ArrayList<>(recordCount);
+        List<MemberPrivacy> memberPrivacies = new ArrayList<>(recordCount);
+        List<AgreementType> agreementTypes = new ArrayList<>(recordCount);
+        List<Agreement> agreements = new ArrayList<>(recordCount);
+        List<AgreementLog> agreementLogs = new ArrayList<>(recordCount);
+        List<MemberAgreement> memberAgreements = new ArrayList<>(recordCount);
+        List<RoommateBoard> boards = new ArrayList<>(recordCount);
+        List<RoommateBoardOption> boardOptions = new ArrayList<>(recordCount * 2);
+        List<RoommateBoardFile> boardFiles = new ArrayList<>(recordCount);
+        List<RoommateBoardInterest> boardInterests = new ArrayList<>(recordCount);
+        List<Search> searches = new ArrayList<>(recordCount);
+        List<Inquiry> inquiries = new ArrayList<>(recordCount);
+        List<InquiryComment> inquiryComments = new ArrayList<>(recordCount);
+        List<ChattingRequired> chattingRequirements = new ArrayList<>(recordCount);
+        List<ChattingRoom> chattingRooms = new ArrayList<>(recordCount);
+        List<ChatRoomMember> chatRoomMembers = new ArrayList<>(recordCount * 2);
+        List<ChatRoomMessage> chatMessages = new ArrayList<>(recordCount * 2);
+        List<ChatRoomFile> chatRoomFiles = new ArrayList<>(recordCount);
+        List<Payment> payments = new ArrayList<>(recordCount);
+        List<Point> points = new ArrayList<>(recordCount);
+        List<PointLog> pointLogs = new ArrayList<>(recordCount);
+
+        for (int i = 0; i < recordCount; i++) {
+            Member member = members.get(i);
+            states.add(State.builder().member(member).states(MemberState.ACTIVE).build());
+            basicInformation.add(BasicInformation.builder()
+                    .member(member)
+                    .name("테스터" + ((i + 1) % 100000))
+                    .birth(LocalDate.of(1990 + i % 20, i % 12 + 1, i % 28 + 1))
+                    .gender(i % 2 == 0 ? Gender.MALE : Gender.FEMALE)
+                    .email("loadtest" + (i + 1) + "@example.com")
+                    .build());
+            memberPrivacies.add(MemberPrivacy.builder().member(member).type(MemberPrivacyType.PUBLIC).build());
+
+            AgreementType agreementType = AgreementType.builder()
+                    .name("부하테스트 약관 유형 " + (i + 1))
+                    .isDeleted(false)
+                    .build();
+            agreementTypes.add(agreementType);
+            Agreement agreement = Agreement.builder()
+                    .type(agreementType)
+                    .title("부하테스트 약관 " + (i + 1))
+                    .contents("nGrinder 부하 테스트용 약관 데이터입니다. " + (i + 1))
+                    .isDeleted(false)
+                    .isRequired(true)
+                    .build();
+            agreements.add(agreement);
+            agreementLogs.add(AgreementLog.builder().agreement(agreement).isCurrent(true).build());
+            memberAgreements.add(MemberAgreement.builder().member(member).agreementLog(agreementLogs.get(i)).isAgreed(true).build());
+
+            RoommateBoard board = RoommateBoard.builder()
+                    .member(member)
+                    .title("부하 테스트 게시글 " + (i + 1))
+                    .contents("nGrinder 목록 및 검색 부하 테스트용으로 생성된 게시글입니다. " + (i + 1))
+                    .deposit(300 + i % 20 * 50)
+                    .monthlyRent(30 + i % 10 * 5)
+                    .managementCost(5 + i % 5)
+                    .roomType(roomTypes.get(i % roomTypes.size()))
+                    .region(regions.get(i % regions.size()))
+                    .comeableDateNegotiable(i % 2 == 0)
+                    .comeableDate(LocalDateTime.now().plusDays(i % 90 + 1))
+                    .isDeleted(false)
+                    .hits((long) (i % 1000))
+                    .build();
+            boards.add(board);
+            boardOptions.add(RoommateBoardOption.builder().roommateBoard(board).roomExtraOption(firstOption).build());
+            boardOptions.add(RoommateBoardOption.builder().roommateBoard(board).roomExtraOption(secondOption).build());
+            boardFiles.add(RoommateBoardFile.builder().roommateBoard(board).file(boardFile).isThumbnail(true).build());
+            boardInterests.add(RoommateBoardInterest.builder().member(supportMember).roommateBoard(board).isDeleted(false).build());
+            searches.add(Search.builder().member(member).keyword("부하테스트 " + (i + 1)).build());
+
+            Inquiry inquiry = Inquiry.builder()
+                    .member(member)
+                    .inquiryCategory(inquiryCategory)
+                    .title("부하 테스트 문의 " + (i + 1))
+                    .contents("nGrinder 문의 목록 테스트용 데이터입니다. " + (i + 1))
+                    .isDeleted(false)
+                    .build();
+            inquiries.add(inquiry);
+            inquiryComments.add(InquiryComment.builder()
+                    .member(adminMember)
+                    .inquiry(inquiry)
+                    .contents("부하 테스트 답변 " + (i + 1))
+                    .isDeleted(false)
+                    .build());
+
+            ChattingRequired chattingRequired = ChattingRequired.builder()
+                    .requester(member)
+                    .requestee(supportMember)
+                    .roommateBoard(board)
+                    .status(ChattingRequiredStatus.ACCEPTED)
+                    .build();
+            chattingRequirements.add(chattingRequired);
+            ChattingRoom chattingRoom = ChattingRoom.builder().chattingRequired(chattingRequired).build();
+            chattingRooms.add(chattingRoom);
+            chatRoomMembers.add(ChatRoomMember.of(chattingRoom, member));
+            chatRoomMembers.add(ChatRoomMember.of(chattingRoom, supportMember));
+            ChatRoomMessage firstMessage = ChatRoomMessage.builder()
+                    .chattingRoom(chattingRoom)
+                    .member(member)
+                    .contents("부하 테스트 메시지 " + (i + 1) + "-1")
+                    .type(MessageType.TEXT)
+                    .isRead(true)
+                    .build();
+            ChatRoomMessage secondMessage = ChatRoomMessage.builder()
+                    .chattingRoom(chattingRoom)
+                    .member(supportMember)
+                    .contents("부하 테스트 메시지 " + (i + 1) + "-2")
+                    .type(MessageType.TEXT)
+                    .isRead(false)
+                    .build();
+            chatMessages.add(firstMessage);
+            chatMessages.add(secondMessage);
+            chatRoomFiles.add(ChatRoomFile.builder().chatRoomMessage(firstMessage).file(chatFile).build());
+
+            payments.add(Payment.builder()
+                    .member(member)
+                    .paymentKey("load_test_payment_" + (i + 1))
+                    .amount(10000L + i)
+                    .type(PaymentType.CARD)
+                    .status(PaymentStatus.PENDING)
+                    .build());
+            points.add(Point.builder().member(member).points(1000L + i).build());
+            pointLogs.add(PointLog.builder()
+                    .member(member)
+                    .points(1000L + i)
+                    .reason("부하 테스트 포인트 " + (i + 1))
+                    .variance(VarianceType.INCREASE)
+                    .build());
+        }
+
+        agreementTypeRepository.saveAll(agreementTypes);
+        agreementRepository.saveAll(agreements);
+        agreementLogRepository.saveAll(agreementLogs);
+        stateRepository.saveAll(states);
+        basicInformationRepository.saveAll(basicInformation);
+        memberPrivacyRepository.saveAll(memberPrivacies);
+        memberAgreementRepository.saveAll(memberAgreements);
+        roommateBoardRepository.saveAll(boards);
+        roommateBoardOptionRepository.saveAll(boardOptions);
+        roommateBoardFileRepository.saveAll(boardFiles);
+        roommateBoardInterestRepository.saveAll(boardInterests);
+        searchRepository.saveAll(searches);
+        inquiryRepository.saveAll(inquiries);
+        inquiryCommentRepository.saveAll(inquiryComments);
+        chattingRequiredRepository.saveAll(chattingRequirements);
+        chattingRoomRepository.saveAll(chattingRooms);
+        chatRoomMemberRepository.saveAll(chatRoomMembers);
+        chatRoomMessageRepository.saveAll(chatMessages);
+        chatRoomFileRepository.saveAll(chatRoomFiles);
+        paymentRepository.saveAll(payments);
+        pointRepository.saveAll(points);
+        pointLogRepository.saveAll(pointLogs);
+
+        seedAdditionalLoadTestData(
+                recordCount,
+                members,
+                basicInformation,
+                boards,
+                chattingRequirements,
+                chattingRooms,
+                supportMember,
+                adminMember,
+                regions,
+                roomTypes,
+                profileFile
+        );
+        seedLoadTestLookupData(recordCount);
+    }
+
+    private void seedAdditionalLoadTestData(
+            int recordCount,
+            List<Member> members,
+            List<BasicInformation> basicInformation,
+            List<RoommateBoard> boards,
+            List<ChattingRequired> chattingRequirements,
+            List<ChattingRoom> chattingRooms,
+            Member supportMember,
+            Member adminMember,
+            List<Region> regions,
+            List<RoomType> roomTypes,
+            File profileFile
+    ) {
+        LifePatternInformation patternInformation = lifePatternInformationRepository.findAll().get(0);
+        LifePattern lifePattern = lifePatternRepository.findAll().get(0);
+
+        List<MemberInterest> interests = new ArrayList<>(recordCount);
+        List<Block> blocks = new ArrayList<>(recordCount);
+        List<MemberDeclaration> memberDeclarations = new ArrayList<>(recordCount);
+        List<RoommateBoardDeclaration> boardDeclarations = new ArrayList<>(recordCount);
+        List<Faq> faqs = new ArrayList<>(recordCount);
+        List<Authentication> authentications = new ArrayList<>(recordCount);
+        List<AuthenticationApprove> authenticationApproves = new ArrayList<>(recordCount);
+        List<BasicInformationFile> basicInformationFiles = new ArrayList<>(recordCount);
+        List<RoomOfferProfile> offerProfiles = new ArrayList<>(recordCount);
+        List<RoomSeekerProfile> seekerProfiles = new ArrayList<>(recordCount);
+        List<OfferRoomType> offerRoomTypes = new ArrayList<>(recordCount);
+        List<SeekerRoomType> seekerRoomTypes = new ArrayList<>(recordCount);
+        List<RoomSeekerProfileRegion> seekerProfileRegions = new ArrayList<>(recordCount);
+        List<MemberLifePattern> memberLifePatterns = new ArrayList<>(recordCount);
+        List<PreferenceCondition> preferenceConditions = new ArrayList<>(recordCount);
+        List<PreferenceConditionWeight> preferenceWeights = new ArrayList<>(recordCount);
+        List<MemberLifePatternLogDegree> memberLogDegrees = new ArrayList<>(recordCount);
+        List<PreferenceConditionLogDegree> preferenceLogDegrees = new ArrayList<>(recordCount);
+        List<PreferenceConditionWeightLogDegree> weightLogDegrees = new ArrayList<>(recordCount);
+        List<MemberLifePatternLog> memberLifePatternLogs = new ArrayList<>(recordCount);
+        List<PreferenceConditionLog> preferenceConditionLogs = new ArrayList<>(recordCount);
+        List<PreferenceConditionWeightLog> preferenceWeightLogs = new ArrayList<>(recordCount);
+        List<ChattingScore> chattingScores = new ArrayList<>(recordCount);
+        List<RoommateMatchingRequired> matchingRequirements = new ArrayList<>(recordCount);
+        List<MyRoommate> roommates = new ArrayList<>(recordCount);
+        List<RoommateScore> roommateScores = new ArrayList<>(recordCount);
+        List<RoommateHouseRule> houseRules = new ArrayList<>(recordCount);
+        List<RoommateCalendarCategory> calendarCategories = new ArrayList<>(recordCount);
+        List<RoommateCalendar> calendars = new ArrayList<>(recordCount);
+        List<RoommateCalendarMember> calendarMembers = new ArrayList<>(recordCount * 2);
+        List<RepeatRoommateCalendar> repeatingCalendars = new ArrayList<>(recordCount);
+        List<ExcludeRoommateCalendar> excludedCalendarOccurrences = new ArrayList<>(recordCount);
+        List<AlarmSetting> alarmSettings = new ArrayList<>(recordCount);
+        List<Alarm> alarms = new ArrayList<>(recordCount);
+        List<Notification> notifications = new ArrayList<>(recordCount);
+        List<NotificationAlarm> notificationAlarms = new ArrayList<>(recordCount);
+        List<ChattingRequiredAlarm> chattingAlarms = new ArrayList<>(recordCount);
+        List<RoommateMatchingRequiredAlarm> matchingAlarms = new ArrayList<>(recordCount);
+        List<RoommateCalendarAlarm> calendarAlarms = new ArrayList<>(recordCount);
+
+        List<Member> extraSeekerMembers = new ArrayList<>(recordCount);
+        List<State> extraSeekerStates = new ArrayList<>(recordCount);
+        List<BasicInformation> extraSeekerInformation = new ArrayList<>(recordCount);
+        List<MemberPrivacy> extraSeekerPrivacy = new ArrayList<>(recordCount);
+        for (int i = 1; i <= recordCount; i++) {
+            Member seekerMember = Member.builder()
+                    .providerType(i % 2 == 0 ? LoginProviderType.KAKAO : LoginProviderType.APPLE)
+                    .providerId("load_test_seeker_" + i)
+                    .role(MemberRole.USER)
+                    .isDelete(false)
+                    .build();
+            extraSeekerMembers.add(seekerMember);
+            extraSeekerStates.add(State.builder().member(seekerMember).states(MemberState.ACTIVE).build());
+            extraSeekerPrivacy.add(MemberPrivacy.builder().member(seekerMember).type(MemberPrivacyType.PUBLIC).build());
+            extraSeekerInformation.add(BasicInformation.builder().member(seekerMember)
+                    .name("방찾기" + i).birth(LocalDate.of(1990 + i % 20, i % 12 + 1, i % 28 + 1))
+                    .gender(i % 2 == 0 ? Gender.MALE : Gender.FEMALE)
+                    .email("loadseeker" + i + "@example.com").build());
+        }
+        memberRepository.saveAll(extraSeekerMembers);
+        stateRepository.saveAll(extraSeekerStates);
+        memberPrivacyRepository.saveAll(extraSeekerPrivacy);
+        basicInformationRepository.saveAll(extraSeekerInformation);
+
+        for (int i = 0; i < recordCount; i++) {
+            Member member = members.get(i);
+            Member seekerMember = extraSeekerMembers.get(i);
+            RoommateBoard board = boards.get(i);
+            ChattingRequired chattingRequired = chattingRequirements.get(i);
+            ChattingRoom chattingRoom = chattingRooms.get(i);
+            BasicInformation info = basicInformation.get(i);
+            RoomType roomType = roomTypes.get(i % roomTypes.size());
+            Region region = regions.get(i % regions.size());
+
+            interests.add(MemberInterest.builder().sender(member).receiver(supportMember).isDeleted(false).build());
+            blocks.add(Block.builder().blocker(member).blocked(supportMember).isDeleted(false).build());
+            memberDeclarations.add(MemberDeclaration.builder()
+                    .reporter(member).reported(supportMember).reason("부하 테스트 신고 " + (i + 1))
+                    .declarationType(DeclarationType.PENDING).build());
+            boardDeclarations.add(RoommateBoardDeclaration.builder()
+                    .member(supportMember).roommateBoard(board).reason("부하 테스트 게시글 신고 " + (i + 1))
+                    .declarationType(DeclarationType.PENDING).build());
+            faqs.add(Faq.builder()
+                    .title("부하 테스트 FAQ " + (i + 1))
+                    .contents("nGrinder FAQ 조회 테스트 데이터입니다. " + (i + 1))
+                    .member(adminMember).sort(i + 1).isDeleted(false).build());
+
+            Authentication authentication = Authentication.builder()
+                    .member(member).type(AuthenticationType.STUDENT)
+                    .email("loadtest" + (i + 1) + "@univ.ac.kr")
+                    .code(String.format("%06d", (i + 1) % 1_000_000)).isAccepted(true).build();
+            authentications.add(authentication);
+            authenticationApproves.add(AuthenticationApprove.builder()
+                    .authentication(authentication).status(ApproveType.ACCEPTED).build());
+            basicInformationFiles.add(BasicInformationFile.builder().basicInformation(info).file(profileFile).build());
+
+            RoomOfferProfile offerProfile = RoomOfferProfile.builder()
+                    .member(member).region(region).deposit(300 + i % 20 * 50)
+                    .monthlyRent(30 + i % 10 * 5).comeableAt(LocalDateTime.now().plusDays(i % 90 + 1))
+                    .isComeableAtNegotiable(i % 2 == 0).build();
+            offerProfiles.add(offerProfile);
+            RoomSeekerProfile seekerProfile = RoomSeekerProfile.builder()
+                    .member(seekerMember).minDeposit(100).maxDeposit(1000).minMonthlyRent(30).maxMonthlyRent(80)
+                    .comeableAt(LocalDateTime.now().plusDays(i % 90 + 1))
+                    .isComeableAtNegotiable(i % 2 == 0).build();
+            seekerProfiles.add(seekerProfile);
+            offerRoomTypes.add(OfferRoomType.builder().roomOfferProfile(offerProfile).roomType(roomType).build());
+            seekerRoomTypes.add(SeekerRoomType.builder().roomSeekerProfile(seekerProfile).roomType(roomType).build());
+            seekerProfileRegions.add(RoomSeekerProfileRegion.builder().roomSeekerProfile(seekerProfile).region(region).build());
+
+            memberLifePatterns.add(MemberLifePattern.builder().member(member).lifePatternInformation(patternInformation).build());
+            preferenceConditions.add(PreferenceCondition.builder().member(member).lifePatternInformation(patternInformation).build());
+            preferenceWeights.add(PreferenceConditionWeight.builder().member(member).lifePattern(lifePattern).build());
+            MemberLifePatternLogDegree memberDegree = MemberLifePatternLogDegree.builder().degree((long) i + 1).build();
+            PreferenceConditionLogDegree preferenceDegree = PreferenceConditionLogDegree.builder().degree((long) i + 1).build();
+            PreferenceConditionWeightLogDegree weightDegree = PreferenceConditionWeightLogDegree.builder().degree((long) i + 1).build();
+            memberLogDegrees.add(memberDegree);
+            preferenceLogDegrees.add(preferenceDegree);
+            weightLogDegrees.add(weightDegree);
+            memberLifePatternLogs.add(MemberLifePatternLog.builder().member(member)
+                    .lifePatternInformation(patternInformation).memberLifePatternLogDegree(memberDegree).build());
+            preferenceConditionLogs.add(PreferenceConditionLog.builder().member(member)
+                    .lifePatternInformation(patternInformation).preferenceConditionLogDegree(preferenceDegree).build());
+            preferenceWeightLogs.add(PreferenceConditionWeightLog.builder().member(member)
+                    .lifePattern(lifePattern).preferenceConditionWeightLogDegree(weightDegree).build());
+            ChattingScore chattingScore = ChattingScore.builder().chattingRequired(chattingRequired)
+                    .memberLifePatternLogDegree(memberDegree).preferenceConditionLogDegree(preferenceDegree)
+                    .preferenceConditionWeightLogDegree(weightDegree).score(50 + i % 51).build();
+            chattingScores.add(chattingScore);
+
+            RoommateMatchingRequired matching = RoommateMatchingRequired.builder()
+                    .requester(member).requestee(supportMember).chattingRoom(chattingRoom)
+                    .status(RoommateRequiredStatus.ACCEPTED).build();
+            matchingRequirements.add(matching);
+            MyRoommate roommate = MyRoommate.builder().roommateMatchingRequired(matching).isDeleted(false).build();
+            roommates.add(roommate);
+            roommateScores.add(RoommateScore.builder().myRoommate(roommate).chattingScore(chattingScore).build());
+            houseRules.add(RoommateHouseRule.builder().member(member).myRoommate(roommate)
+                    .title("부하 테스트 생활 규칙 " + (i + 1)).contents("공용 공간을 깨끗하게 사용합니다.")
+                    .isDeleted(false).build());
+
+            RoommateCalendarCategory category = RoommateCalendarCategory.builder().name("부하 테스트 일정 " + (i + 1)).build();
+            calendarCategories.add(category);
+            RoommateCalendar calendar = RoommateCalendar.builder().myRoommate(roommate).member(member)
+                    .roommateCalendarCategory(category).title("부하 테스트 일정 " + (i + 1))
+                    .contents("nGrinder 일정 조회 테스트 데이터입니다.")
+                    .startDate(LocalDateTime.now()).endDate(LocalDateTime.now().plusHours(1))
+                    .isDeleted(false).build();
+            calendars.add(calendar);
+            calendarMembers.add(RoommateCalendarMember.of(calendar, member));
+            calendarMembers.add(RoommateCalendarMember.of(calendar, supportMember));
+            RepeatRoommateCalendar repeat = RepeatRoommateCalendar.builder().roommateCalendar(calendar)
+                    .repeatType(RepeatType.WEEKLY).endDate(LocalDateTime.now().plusMonths(3)).build();
+            repeatingCalendars.add(repeat);
+            excludedCalendarOccurrences.add(ExcludeRoommateCalendar.builder().repeatRoommateCalendar(repeat)
+                    .excludeAt(LocalDateTime.now().plusDays(7)).build());
+
+            alarmSettings.add(AlarmSetting.builder().member(member)
+                    .alarmSettingType(AlarmSettingType.NOTIFICATION).isEnabled(true).build());
+            Alarm alarm = Alarm.builder().member(member).title("부하 테스트 알림 " + (i + 1))
+                    .contents("nGrinder 알림 조회 테스트 데이터입니다.")
+                    .expiredAt(LocalDateTime.now().plusDays(30)).isRead(false).build();
+            alarms.add(alarm);
+            Notification notification = Notification.builder().member(adminMember)
+                    .title("부하 테스트 공지 " + (i + 1)).contents("nGrinder 공지 조회 테스트 데이터입니다.")
+                    .isDeleted(false).build();
+            notifications.add(notification);
+            notificationAlarms.add(NotificationAlarm.builder().alarm(alarm).notification(notification).build());
+            chattingAlarms.add(ChattingRequiredAlarm.builder().member(member).title("부하 테스트 채팅 알림")
+                    .expiredAt(LocalDateTime.now().plusDays(30)).chattingRequired(chattingRequired).build());
+            matchingAlarms.add(RoommateMatchingRequiredAlarm.builder().member(member).title("부하 테스트 매칭 알림")
+                    .expiredAt(LocalDateTime.now().plusDays(30)).roommateMatchingRequired(matching).build());
+            calendarAlarms.add(RoommateCalendarAlarm.builder().member(member).title("부하 테스트 일정 알림")
+                    .expiredAt(LocalDateTime.now().plusDays(30)).roommateCalendar(calendar).build());
+        }
+
+        memberInterestRepository.saveAll(interests);
+        blockRepository.saveAll(blocks);
+        memberDeclarationRepository.saveAll(memberDeclarations);
+        roommateBoardDeclarationRepository.saveAll(boardDeclarations);
+        faqRepository.saveAll(faqs);
+        authenticationRepository.saveAll(authentications);
+        authenticationApproveRepository.saveAll(authenticationApproves);
+        basicInformationFileRepository.saveAll(basicInformationFiles);
+        roomOfferProfileRepository.saveAll(offerProfiles);
+        roomSeekerProfileRepository.saveAll(seekerProfiles);
+        offerRoomTypeRepository.saveAll(offerRoomTypes);
+        seekerRoomTypeRepository.saveAll(seekerRoomTypes);
+        roomSeekerProfileRegionRepository.saveAll(seekerProfileRegions);
+        memberLifePatternRepository.saveAll(memberLifePatterns);
+        preferenceConditionRepository.saveAll(preferenceConditions);
+        preferenceConditionWeightRepository.saveAll(preferenceWeights);
+        memberLifePatternLogDegreeRepository.saveAll(memberLogDegrees);
+        preferenceConditionLogDegreeRepository.saveAll(preferenceLogDegrees);
+        preferenceConditionWeightLogDegreeRepository.saveAll(weightLogDegrees);
+        memberLifePatternLogRepository.saveAll(memberLifePatternLogs);
+        preferenceConditionLogRepository.saveAll(preferenceConditionLogs);
+        preferenceConditionWeightLogRepository.saveAll(preferenceWeightLogs);
+        chattingScoreRepository.saveAll(chattingScores);
+        roommateMatchingRequiredRepository.saveAll(matchingRequirements);
+        myRoommateRepository.saveAll(roommates);
+        roommateScoreRepository.saveAll(roommateScores);
+        roommateHouseRuleRepository.saveAll(houseRules);
+        roommateCalendarCategoryRepository.saveAll(calendarCategories);
+        roommateCalendarRepository.saveAll(calendars);
+        roommateCalendarMemberRepository.saveAll(calendarMembers);
+        repeatRoommateCalendarRepository.saveAll(repeatingCalendars);
+        excludeRoommateCalendarRepository.saveAll(excludedCalendarOccurrences);
+        alarmSettingRepository.saveAll(alarmSettings);
+        alarmRepository.saveAll(alarms);
+        notificationRepository.saveAll(notifications);
+        notificationAlarmRepository.saveAll(notificationAlarms);
+        chattingRequiredAlarmRepository.saveAll(chattingAlarms);
+        roommateMatchingRequiredAlarmRepository.saveAll(matchingAlarms);
+        roommateCalendarAlarmRepository.saveAll(calendarAlarms);
+    }
+
+    private void seedLoadTestLookupData(int recordCount) {
+        Region parentRegion = regionRepository.findAll().stream()
+                .filter(region -> region.getScope() == 2)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Load test seed requires a level-2 region"));
+
+        List<Region> regions = new ArrayList<>(recordCount);
+        List<RoomType> roomTypes = new ArrayList<>(recordCount);
+        List<RoomExtraOption> roomExtraOptions = new ArrayList<>(recordCount);
+        List<LifePattern> lifePatterns = new ArrayList<>(recordCount);
+        List<LifePatternInformation> patternInformations = new ArrayList<>(recordCount);
+        List<InquiryCategory> inquiryCategories = new ArrayList<>(recordCount);
+        List<AppVersion> appVersions = new ArrayList<>(recordCount);
+        List<AuthEmail> authEmails = new ArrayList<>(recordCount);
+        List<File> files = new ArrayList<>(recordCount);
+
+        for (int i = 1; i <= recordCount; i++) {
+            regions.add(Region.builder().name("부하테스트 지역 " + i).scope(3).parent(parentRegion).build());
+            roomTypes.add(RoomType.builder().name("부하테스트 방 유형 " + i).isDeleted(false).build());
+            roomExtraOptions.add(RoomExtraOption.builder().name("부하테스트 옵션 " + i).isDeleted(false).build());
+            LifePattern lifePattern = LifePattern.builder().name("부하테스트 생활패턴 " + i)
+                    .dtype(LifePatternType.SCALE)
+                    .lifePatternDescription("nGrinder 생활패턴 조회 테스트 데이터")
+                    .preferenceDescription("nGrinder 선호조건 조회 테스트 데이터")
+                    .isDeleted(false).sort(i + 8).build();
+            lifePatterns.add(lifePattern);
+            patternInformations.add(LifePatternInformation.builder().lifePattern(lifePattern)
+                    .dvalue("1").description("부하 테스트 선택지 " + i).build());
+            inquiryCategories.add(InquiryCategory.builder().title("부하 테스트 문의 유형 " + i).isDeleted(false).build());
+            appVersions.add(AppVersion.builder().platformType(i % 2 == 0 ? PlatformType.ANDROID : PlatformType.IOS)
+                    .version("1.0." + i).minVersion("1.0.0").updateType(UpdateType.SELECT).isDeleted(false).build());
+            authEmails.add(AuthEmail.builder().domain("loadtest" + i + ".example.com")
+                    .name("부하 테스트 인증 도메인 " + i)
+                    .dtype(i % 2 == 0 ? AuthenticationType.STUDENT : AuthenticationType.COMPANY)
+                    .isDeleted(false).build());
+            files.add(File.builder().type(FileType.ETC)
+                    .originalFileName("load-test-" + i + ".jpg")
+                    .savedFileName("load-test-" + i + ".jpg")
+                    .fileExt("jpg").isDeleted(false).build());
+        }
+
+        regionRepository.saveAll(regions);
+        roomTypeRepository.saveAll(roomTypes);
+        roomExtraOptionRepository.saveAll(roomExtraOptions);
+        lifePatternRepository.saveAll(lifePatterns);
+        lifePatternInformationRepository.saveAll(patternInformations);
+        inquiryCategoryRepository.saveAll(inquiryCategories);
+        appVersionRepository.saveAll(appVersions);
+        authEmailRepository.saveAll(authEmails);
+        fileRepository.saveAll(files);
+
+        List<RoomTypeFile> roomTypeFiles = new ArrayList<>(recordCount);
+        List<RoomExtraOptionFile> roomExtraOptionFiles = new ArrayList<>(recordCount);
+        List<LifePatternFile> lifePatternFiles = new ArrayList<>(recordCount);
+        for (int i = 0; i < recordCount; i++) {
+            File file = files.get(i);
+            roomTypeFiles.add(RoomTypeFile.builder().roomType(roomTypes.get(i)).file(file).build());
+            roomExtraOptionFiles.add(RoomExtraOptionFile.builder().roomExtraOption(roomExtraOptions.get(i)).file(file).build());
+            lifePatternFiles.add(LifePatternFile.builder().lifePattern(lifePatterns.get(i)).file(file).build());
+        }
+        roomTypeFileRepository.saveAll(roomTypeFiles);
+        roomExtraOptionFileRepository.saveAll(roomExtraOptionFiles);
+        lifePatternFileRepository.saveAll(lifePatternFiles);
     }
 
     private List<LifePatternInformation> createLifePatternInformation(

@@ -386,7 +386,10 @@ public class RoommateBoardRepositoryImpl implements RoommateBoardRepositoryCusto
                 .leftJoin(roommateBoard.region, region)
                 .leftJoin(region.parent, parent)
                 .leftJoin(parent.parent, grandParent)
-                .where(searchTitle(request.getSearchKeyword()).or(searchWriter(request.getSearchKeyword())).or(searchRegion(request.getSearchKeyword())), searchState(request.getIsDeleted()))
+                .where(
+                        searchKeyword(request.getSearchKeyword()),
+                        searchState(request.getIsDeleted())
+                )
                 .fetch();
     }
 
@@ -496,6 +499,16 @@ public class RoommateBoardRepositoryImpl implements RoommateBoardRepositoryCusto
         if (endDate == null) return null;
         return roommateBoard.comeableDateNegotiable.isTrue()
                 .or(roommateBoard.comeableDate.goe(endDate));
+    }
+
+    private BooleanExpression searchKeyword(String keyword) {
+        if (!StringUtils.hasText(keyword)) {
+            return null;
+        }
+
+        return searchTitle(keyword)
+                .or(searchWriter(keyword))
+                .or(searchRegion(keyword));
     }
 
     private BooleanExpression searchTitle(String title) {
